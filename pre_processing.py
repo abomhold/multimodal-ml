@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 from config import PROFILE_PATH, OUTPUT_PATH
@@ -65,9 +67,6 @@ def build_baseline():
     data["agr"] = data["agr"].mean()
     data["neu"] = data["neu"].mean()
 
+    os.mkdir(OUTPUT_PATH)
     for row in data.iterrows():
         row_to_xml(row)
-
-
-if __name__ == '__main__':
-    build_baseline()
