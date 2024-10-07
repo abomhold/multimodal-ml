@@ -29,7 +29,7 @@ def get_avg_personality():
 def row_to_xml(row):
     row = row[1]
 
-    id, age, gender = (
+    userid, age, gender = (
         row["userid"],
         row["age"],
         row["gender"]
@@ -44,8 +44,8 @@ def row_to_xml(row):
 
     )
 
-    with open(f"{OUTPUT_PATH}/{id}.xml", "w") as f:
-        f.write(f"<user id=\"{id}\" "
+    with open(f"{OUTPUT_PATH}/{userid}.xml", "w") as f:
+        f.write(f"<user id=\"{userid}\" "
                 f"age_group=\"xx-{age}\" "
                 f"gender=\"{gender}\" "
                 f"extrovert=\"{ext:.3f}\" "
