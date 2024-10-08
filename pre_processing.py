@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+from config import PROFILE_PATH
 
 from config import PROFILE_PATH, OUTPUT_PATH
 
