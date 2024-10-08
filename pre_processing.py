@@ -1,6 +1,10 @@
 import pandas as pd
+<<<<<<< HEAD
+from config import PROFILE_PATH
+=======
 
 from config import PROFILE_PATH, OUTPUT_PATH
+>>>>>>> 87c7db27e79d4abfcf555a49392a91fbc8674a88
 
 
 def get_most_gender():
@@ -24,6 +28,8 @@ def get_avg_personality():
     ave_neu = data["neu"].mean()
 
     return avg_ope, ave_con, ave_ext, ave_agr, ave_neu
+<<<<<<< HEAD
+=======
 
 
 def row_to_xml(row):
@@ -71,3 +77,4 @@ def build_baseline():
 
 if __name__ == '__main__':
     build_baseline()
+>>>>>>> 87c7db27e79d4abfcf555a49392a91fbc8674a88
