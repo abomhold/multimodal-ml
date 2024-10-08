@@ -160,5 +160,26 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
-
+sh_history
+.bash_history
+.bash_logout
+.bashrc
+.config/
+.gnupg/
+.local/
+.profile
+.ssh/
+.sudo_as_admin_successful
+.vboxclient-clipboard-tty2-control.pid
+.vboxclient-draganddrop-tty2-control.pid
+.vboxclient-hostversion-tty2-control.pid
+.vboxclient-seamless-tty2-control.pid
+.vboxclient-vmsvga-session-tty2-control.pid
+.wget-hsts
+Downloads/
+output/
+public-test-data/
+snap/
+tcss555.zip
+training/
 /tcss555/training
