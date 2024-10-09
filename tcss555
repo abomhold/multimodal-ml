@@ -33,6 +33,7 @@ parse_args() {
 
 function main() {
     parse_args "$@"
+    rm -rf "$OUTPUTPATH"
     python3 main.py "$INPUTPATH" "$OUTPUTPATH"
 
 }
