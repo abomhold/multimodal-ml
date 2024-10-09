@@ -2,3 +2,10 @@
 rm -rf output/
 python3 main.py
 
+
+main() {
+
+}
+
+
+main "$@"

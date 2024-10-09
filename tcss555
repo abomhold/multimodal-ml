@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Brief description of your script
+# Copyright 2024 austin
+
+# Globals:
+# Arguments:
+#  None
+function main() {
+    :
+}
+
+main "$@"
