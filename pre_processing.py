@@ -23,15 +23,18 @@ def row_to_xml(row):
 
     )
 
+    xml_string = (f"<user id=\"{userid}\" "
+                  f"age_group=\"xx-{age}\" "
+                  f"gender=\"{gender}\" "
+                  f"extrovert=\"{ext:.3f}\" "
+                  f"neurotic=\"{neu:.3f}\" "
+                  f"agreeable=\"{agr:.3f}\" "
+                  f"conscientiousness=\"{con:.3f}\" "
+                  f"open=\"{ope:.3f}\" />")
+
+    print(xml_string)
     with open(f"{OUTPUT_PATH}/{userid}.xml", "w") as f:
-        f.write(f"<user id=\"{userid}\" "
-                f"age_group=\"xx-{age}\" "
-                f"gender=\"{gender}\" "
-                f"extrovert=\"{ext:.3f}\" "
-                f"neurotic=\"{neu:.3f}\" "
-                f"agreeable=\"{agr:.3f}\" "
-                f"conscientiousness=\"{con:.3f}\" "
-                f"open=\"{ope:.3f}\" />")
+        f.write(xml_string)
 
 
 def build_baseline():
