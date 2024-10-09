@@ -1,13 +1,40 @@
 #!/bin/bash
-#
-# Brief description of your script
-# Copyright 2024 austin
 
 # Globals:
+INPUTPATH=""
+OUTPUTPATH=""
+
 # Arguments:
 #  None
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -i | --input)
+        INPUTPATH="$2"
+        shift # past argument
+        shift # past value
+        ;;
+      -o | --output)
+        OUTPUTPATH="$2"
+        shift # past argument
+        shift # past value
+        ;;
+      *)
+        echo "Unknown option $1"
+        exit 1
+        ;;
+    esac
+  done
+
+  echo "FILE EXTENSION  = ${INPUTPATH}"
+  echo "SEARCH PATH     = ${OUTPUTPATH}"
+}
+
 function main() {
-    :
+    parse_args "$@"
+    python3 main.py "$INPUTPATH" "$OUTPUTPATH"
+
 }
 
 main "$@"
