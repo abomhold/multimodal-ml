@@ -1,13 +1,21 @@
 #!/bin/bash
-
+set -oue pipefail
 # Globals:
-INPUTPATH=""
-OUTPUTPATH=""
+INPUTPATH="input"
+OUTPUTPATH="output"
 
 # Arguments:
 #  None
 
-parse_args() {
+#######################################
+# description
+# Globals:
+#   INPUTPATH
+#   OUTPUTPATH
+# Arguments:
+#  None
+#######################################
+function parse_args() {
   while [[ $# -gt 0 ]]; do
     case $1 in
       -i | --input)
@@ -21,20 +29,29 @@ parse_args() {
         shift # past value
         ;;
       *)
-        echo "Unknown option $1"
+        echo "Unknown option"
         exit 1
         ;;
     esac
   done
-
-  echo "FILE EXTENSION  = ${INPUTPATH}"
-  echo "SEARCH PATH     = ${OUTPUTPATH}"
 }
+#  echo "FILE EXTENSION  = ${INPUTPATH}"
+#  echo "SEARCH PATH     = ${OUTPUTPATH}"
 
+#######################################
+# description
+# Globals:
+#   INPUTPATH
+#   OUTPUTPATH
+# Arguments:
+#  None
+#######################################
 function main() {
-    parse_args "$@"
-    rm -rf "$OUTPUTPATH"
-    python3 main.py "$INPUTPATH" "$OUTPUTPATH"
+  parse_args "$@"
+  rm -rf "$OUTPUTPATH"
+  mkdir -p "$OUTPUTPATH"
+  pip install -r requirements.txt &>/dev/null
+  python3 main.py "$INPUTPATH" "$OUTPUTPATH"
 
 }
 

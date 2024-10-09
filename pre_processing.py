@@ -1,8 +1,6 @@
 import os
 import pandas as pd
-
-PROFILE_PATH = "training/profile/profile.csv"
-OUTPUT_PATH = "output"
+import config
 
 
 def row_to_xml(row):
@@ -32,13 +30,13 @@ def row_to_xml(row):
                   f"conscientiousness=\"{con:.3f}\" "
                   f"open=\"{ope:.3f}\" />")
 
-    print(xml_string)
-    with open(f"{OUTPUT_PATH}/{userid}.xml", "w") as f:
+    # print(xml_string)
+    with open(f"{config.OUTPUT_PATH}/{userid}.xml", "w") as f:
         f.write(xml_string)
 
 
 def build_baseline():
-    data = pd.read_csv(PROFILE_PATH)
+    data = pd.read_csv(config.INPUT_PATH)
     data["gender"] = data["gender"].mode()[0]
     data["age"] = data["age"].mode()[0]
     data["ope"] = data["ope"].mean()
@@ -47,7 +45,6 @@ def build_baseline():
     data["agr"] = data["agr"].mean()
     data["neu"] = data["neu"].mean()
 
-    os.mkdir(OUTPUT_PATH)
     for row in data.iterrows():
         row_to_xml(row)
 
