@@ -36,7 +36,7 @@ def row_to_xml(row):
 
 
 def build_baseline():
-    data = pd.read_csv(config.INPUT_PATH)
+    data = pd.read_csv(config.INPUT_PATH + "profile/profile.csv")
     data["gender"] = data["gender"].mode()[0]
     data["age"] = data["age"].mode()[0]
     data["ope"] = data["ope"].mean()
