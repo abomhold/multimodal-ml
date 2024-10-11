@@ -4,17 +4,6 @@ set -oue pipefail
 INPUTPATH="input"
 OUTPUTPATH="output"
 
-# Arguments:
-#  None
-
-#######################################
-# description
-# Globals:
-#   INPUTPATH
-#   OUTPUTPATH
-# Arguments:
-#  None
-#######################################
 function parse_args() {
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -35,23 +24,13 @@ function parse_args() {
     esac
   done
 }
-#  echo "FILE EXTENSION  = ${INPUTPATH}"
-#  echo "SEARCH PATH     = ${OUTPUTPATH}"
 
-#######################################
-# description
-# Globals:
-#   INPUTPATH
-#   OUTPUTPATH
-# Arguments:
-#  None
-#######################################
 function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
-  source .venv/bin/activate
-  pip install -r requirements.txt
+  source $HOME/.venv/bin/activate
+  pip install -r requirements.txt &>/dev/null 
   python3 main.py "$INPUTPATH" "$OUTPUTPATH"
 
 }
