@@ -3,9 +3,8 @@ import torch.nn as nn
 
 
 class VGG16(nn.Module):
-    def __init__(self, device, num_class):
+    def __init__(self, num_class):
         super(VGG16, self).__init__()
-        self.device = device
         self.num_class = num_class
 
         self.conv_block_1 = nn.Sequential(
