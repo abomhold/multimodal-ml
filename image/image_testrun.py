@@ -19,3 +19,4 @@ def test(input_path, device):
 
     model.train()
     for epoch in range(100):
+        print("Yaaaay")
