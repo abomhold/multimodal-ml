@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 from torchvision.transforms import v2
-from image_config import WIDTH, HEIGHT, IMAGE_TRAIN_PATH
+from image_config import WIDTH, HEIGHT
 
 transforms = v2.Compose([
     v2.RandomHorizontalFlip(p=0.5),
@@ -11,10 +11,10 @@ transforms = v2.Compose([
 ])
 
 
-def preprocess_image():
+def preprocess_image(image_dir):
     images = []
-    for image_file in os.listdir(IMAGE_TRAIN_PATH):
-        image_path = os.path.join(IMAGE_TRAIN_PATH, image_file)
+    for image_file in os.listdir(image_dir):
+        image_path = os.path.join(image_dir, image_file)
 
         try:
             image = Image.open(image_path)
