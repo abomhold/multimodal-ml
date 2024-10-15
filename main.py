@@ -1,15 +1,20 @@
+import sys
+import config
 import pre_processing as pre
+import image.image_testrun as image_testrun
+import torch
+
+
+device = "gpu" if torch.cuda.is_available() else "cpu"
 
 
 def main():
-    mode_gender = pre.get_most_gender()
-    print(mode_gender)
+    config.INPUT_PATH = sys.argv[1]
+    config.OUTPUT_PATH = sys.argv[2]
+    pre.build_baseline()
 
-    mode_age = pre.get_most_age()
-    print(mode_age)
-
-    ope, con, ext, agr, neu = pre.get_avg_personality()
-    print(f"Avg for ope: {ope:.3f}, con: {con:.3f}, ext: {ext:.3f}, agr: {agr:.3f}, neu: {neu:.3f}")
+    # Running the test for image classification for gender
+    image_testrun.test(config.INPUT_PATH, device)
 
 
 if __name__ == "__main__":
