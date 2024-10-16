@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 from torchvision.transforms import v2
-from image_config import WIDTH, HEIGHT
+from image.image_config import WIDTH, HEIGHT
 
 transforms = v2.Compose([
     v2.RandomHorizontalFlip(p=0.5),
@@ -12,7 +12,7 @@ transforms = v2.Compose([
 
 
 def preprocess_image(image_dir):
-    images = []
+    images = {}
     for image_file in os.listdir(image_dir):
         image_path = os.path.join(image_dir, image_file)
 
@@ -20,7 +20,7 @@ def preprocess_image(image_dir):
             image = Image.open(image_path)
             resized_image = resize_image(image)
             augmented_image = transforms(resized_image)
-            images.append(augmented_image)
+            images[image_file] = augmented_image
         except IOError:
             print(f"Error opening image: {image_path}")
 
