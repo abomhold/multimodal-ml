@@ -1,5 +1,9 @@
 INPUT_PATH: str
 OUTPUT_PATH: str
+IMAGE_TRAIN_PATH = "dataset/training/image"
+CLASS_TRAIN_PATH = "dataset/training/profile/profile.csv"
+IMAGE_TEST_PATH = "dataset/public-test-data/image"
+CLASS_TEST_PATH = "dataset/public-test-data/profile/profile.csv"
 
 
 def get_configs():
