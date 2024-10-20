@@ -1,19 +1,33 @@
 import os
 import re
+import unicodedata
+
 import pandas as pd
+import nltk as tk
+# Ensure necessary downloads for nltk
+tk.download('punkt')
+tk.download('stopwords')
+tk.download('wordnet')
+
+# Initialize lemmatizer and stop words list
+lemmatizer = tk.WordNetLemmatizer()
+stop_words = set(tk.corpus.stopwords.words('english'))
 
 
 def clean_text(text):
     # Decode, encode, and clean the text
-    cleaned = (text
-               .decode("utf8", "ignore")
-               .encode("ascii", "ignore")
-               .decode("ascii", "ignore")
-               .strip()
-               .lower()
-               )
-    # Remove all non-alphabetic characters except spaces
-    return re.sub(r'[^a-z\s]', '', cleaned)
+    text = text.decode('utf8', "ignore")
+    text = re.sub(r'http\S+|www\S+|https\S+', ' ', text, flags=re.MULTILINE)
+    text = re.sub(r'[^a-zA-Z\s]', ' ', text, flags=re.MULTILINE)
+
+    text = (unicodedata
+            .normalize('NFD', text)
+            )
+    words = tk.word_tokenize(text)
+    words = [word for word in words if word not in stop_words]
+    words = [lemmatizer.lemmatize(word) for word in words]
+    return ' '.join(words).lower().encode('ascii', 'ignore').decode('ascii')
+
 
 
 # Paths
@@ -45,19 +59,14 @@ text_df = pd.DataFrame.from_dict(user_texts, orient='index', columns=['text'])
 text_df.index.name = 'userid'
 
 # Join the profile DataFrame with the text DataFrame
-combined_df = df.join(text_df, how='inner')
+combined_df = (df
+               .join(text_df, how='inner')
+               .reset_index()
+               )
 
-# Reset index to make 'userid' a column
-combined_df = combined_df.reset_index()
-
-# Drop rows with NA values
 combined_df = combined_df.dropna()
 
-# Print some information for verification
-print("Shape of the combined DataFrame after dropping NA:", combined_df.shape)
-print("\nColumns in the combined DataFrame:", combined_df.columns.tolist())
-print("\nFirst few rows of the combined DataFrame:")
-print(combined_df.head())
+print(combined_df.iloc[1])
 
 # Write to CSV
 output_path = "../text/cleaned_text.csv"
