@@ -2,6 +2,7 @@ import os
 import re
 import pandas as pd
 
+
 def clean_text(text):
     # Decode, encode, and clean the text
     cleaned = (text
@@ -13,6 +14,7 @@ def clean_text(text):
                )
     # Remove all non-alphabetic characters except spaces
     return re.sub(r'[^a-z\s]', '', cleaned)
+
 
 # Paths
 text_path = "../training/text"
