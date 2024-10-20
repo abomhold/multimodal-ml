@@ -1,5 +1,7 @@
+
+PROFILE_PATH = "tcss555/training/profile/profile.csv" 
 INPUT_PATH: str
-OUTPUT_PATH: str
+OUTPUT_PATH: str = "output"
 
 
 def get_configs():
