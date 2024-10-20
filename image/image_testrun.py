@@ -27,18 +27,18 @@ def train(train_image_path, train_class_path, device, num_epochs=50):
     step_interval = 10
 
     model.train()
-    for epoch in num_epochs:
+    for epoch in range(num_epochs):
         total_loss = 0.0
         step_count = 0
 
-        for step, (image, labels) in enumerate(train_loader):
+        for step, (images, labels) in enumerate(train_loader):
             images, labels = images.to(device), labels.to(device)
 
             outputs = model(images)
             loss = criterion(outputs, labels)
 
             optimizer.zero_grad()
-            loss.backword()
+            loss.backward()
             optimizer.step()
 
             total_loss += loss
