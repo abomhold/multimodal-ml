@@ -5,12 +5,14 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
+
 def get_image(image_dir):
     images = {}
     for image_file in os.listdir(image_dir):
         image_path = os.path.join(image_dir, image_file)
         image = Image.open(image_path)
-        images[image_file] = image
+        image_name = image_file.removesuffix('.jpg')
+        images[image_name] = image
     return images
 
 
