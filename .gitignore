@@ -160,3 +160,6 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this clean_data.py.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
+training/
+public-test-data/
+
