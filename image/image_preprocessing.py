@@ -20,7 +20,8 @@ def preprocess_image(image_dir):
             image = Image.open(image_path)
             resized_image = resize_image(image)
             augmented_image = transforms(resized_image)
-            images[image_file] = augmented_image
+            image_name = image_file.removesuffix('.jpg')
+            images[image_name] = augmented_image
         except IOError:
             print(f"Error opening image: {image_path}")
 
