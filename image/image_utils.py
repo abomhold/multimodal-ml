@@ -19,7 +19,8 @@ def get_image(image_dir):
 def get_classes(class_path):
     df = pd.read_csv(class_path)
     ids = df["userid"]
-    genders = df["gender"]
+    genders = df["gender"].astype(int)
+    assert genders.isin([0, 1]).all(), "Gender column contains invalid values"
     classes = {user_id: gender for user_id, gender in zip(ids, genders)}
     return classes
 
