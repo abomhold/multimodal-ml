@@ -1,95 +1,45 @@
-import json
-import random
 import pandas as pd
-import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
 
-# Load dataset and clean NaN values
+# Load dataset
 target = "gender"
 df = pd.read_csv("cleaned_text.csv").dropna(subset=['text', target])
-data = df[['text', target]].fillna("")  # Modifying the dataframe in place
-print(data)
+data = df[['text', target]]
 
-# Check a sample row
-print(df.iloc[58])
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(data['text'], data[target], test_size=0.3, random_state=42)
 
-# Shuffle indices for train/test split
-n = 300
-all_Ids = np.arange(len(data))
-np.random.shuffle(all_Ids)  # Shuffle indices directly
+# Create a pipeline with CountVectorizer and Naive Bayes
+pipeline = Pipeline([
+    ('count_vec', CountVectorizer()),
+    ('nb', MultinomialNB()),
+])
 
-# Split into train and test sets
-test_Ids = all_Ids[:n]
-train_Ids = all_Ids[n:]
-print(test_Ids)
+# Create a pipeline with CountVectorizer and Naive Bayes
+# pipeline = Pipeline([
+#     ('count_vec', TfidfVectorizer()),
+#     # ('svm', SVC(kernel='rbf')),
+#     ('nb', LogisticRegression(random_state=42, max_iter=100))
+# ])
 
-data_test = data.iloc[test_Ids, :]
-data_train = data.iloc[train_Ids, :]
+# Perform 10-fold cross-validation
+cv_scores = cross_val_score(pipeline, X_train, y_train, cv=10)
+print("10-fold CV Average Accuracy: {:.3f} (+/- {:.3f})".format(cv_scores.mean(), cv_scores.std() * 2))
 
-# Training a Naive Bayes model
-count_vect = CountVectorizer()
-X_train = count_vect.fit_transform(data_train['text'])
-y_train = data_train[target]
-clf = MultinomialNB()
-clf.fit(X_train, y_train)
+# Train and test model
+pipeline.fit(X_train, y_train)
+y_pred = pipeline.predict(X_test)
+print(y_pred)
 
-# Testing the Naive Bayes model
-X_test = count_vect.transform(data_test['text'])
-y_test = data_test[target]
-y_predicted = clf.predict(X_test)
+# Print confusion matrix
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
 
-# Reporting on classification performance
-print("Accuracy: %.2f" % accuracy_score(y_test, y_predicted))
-
-# Confusion matrix
-classes = sorted(data[target].unique())  # Automatically find class labels
-cnf_matrix = confusion_matrix(y_test, y_predicted, labels=classes)
-print("Confusion matrix:")
-print(cnf_matrix)
-0
-# import json
-# import random
-# import pandas as pd
-# import numpy as np
-# from sklearn.feature_extraction.text import CountVectorizer
-# from sklearn.naive_bayes import MultinomialNB
-# from sklearn.metrics import accuracy_score
-# from sklearn.metrics import confusion_matrix
-#
-# # df = pd.read_csv("../training/LIWC/LIWC.csv")
-# target = "gender"
-# df = pd.read_csv("cleaned_text.csv").dropna()
-# data = df.loc[:, ['text', target]]
-# data.fillna("", inplace=False)
-# print(data)
-#
-# n = 300
-# print(df.iloc[58])
-# all_Ids = np.arange(len(data))
-# random.shuffle(all_Ids.tolist())
-# test_Ids = all_Ids[0:n]
-# train_Ids = all_Ids[n:]
-# print(test_Ids)
-# data_test = data.loc[test_Ids, :]
-# data_train = data.loc[train_Ids, :]
-#
-# # Training a Naive Bayes model
-# count_vect = CountVectorizer()
-# X_train = count_vect.fit_transform(data_train['text'])
-# y_train = data_train[target]
-# clf = MultinomialNB()
-# clf.fit(X_train, y_train)
-#
-# # Testing the Naive Bayes model
-# X_test = count_vect.transform(data_test['text'])
-# y_test = data_test[target]
-# y_predicted = clf.predict(X_test)
-#
-# # Reporting on classification performance
-# print("Accuracy: %.2f" % accuracy_score(y_test, y_predicted))
-# # classes = ['Male', 'Female']
-# # cnf_matrix = confusion_matrix(y_test, y_predicted, labels=classes)
-# # print("Confusion matrix:")
-# # print(cnf_matrix)
+# Print accuracy score
+print("\nTest Set Accuracy:", accuracy_score(y_test, y_pred))

@@ -40,7 +40,7 @@ class VGG16(nn.Module):
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(512 * 7 * 7, 4096),
+            nn.Linear(512 * 13 * 13, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -55,7 +55,10 @@ class VGG16(nn.Module):
         x = self.conv_block_3(x)
         x = self.conv_block_4(x)
 
+#        print(f"Shape after final conv block: {x.shape}")
+
         x = torch.flatten(x, 1)
+#        print(f"Shape after flattening: {x.shape}")
 
         class_out = self.classifier(x)
 
