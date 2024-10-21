@@ -5,6 +5,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
 
 # Load dataset
 target = "gender"
@@ -14,9 +15,16 @@ data = df[['text', target]]
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(data['text'], data[target], test_size=0.3, random_state=42)
 
+# # Create a pipeline with CountVectorizer and Naive Bayes
+# pipeline = Pipeline([
+#     ('count_vec', CountVectorizer()),
+#     ('nb', MultinomialNB()),
+# ])
+
 # Create a pipeline with CountVectorizer and Naive Bayes
 pipeline = Pipeline([
     ('count_vec', TfidfVectorizer()),
+    # ('svm', SVC(kernel='rbf')),
     ('nb', LogisticRegression(random_state=42, max_iter=100))
 ])
 

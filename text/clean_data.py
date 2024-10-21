@@ -18,12 +18,20 @@ from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
+happy = [":‑)", ":)", ":-]", ":]", ":->", ":>", "8-)", "8)", ":-}", ":}", ":^)", "=]", "=)", ":‑D", ":D", "8‑D", "8D",
+         "=D", "=3", "B^D", "c:", "C:", "x‑D", "xD", "X‑D", "XD", ":-))", "^:))"]
+sad = [":‑(", ":(", ":‑c", ":c", ":‑ < ", ": < ", ":‑[", ": [", ":- | | ", ": {", ": @ ", ":(", ";(", ":'‑(", ":'(",
+       " := ("]
+
 
 def clean_text(text: str) -> str:
     """Clean and normalize the input text."""
-    text = unicodedata.normalize('NFD', text)
+    # print(text)
+    # text = unicodedata.normalize('NFD', text)
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text, flags=re.MULTILINE)
+    text = re.sub('|'.join(map(re.escape, happy)), ' happy ', text)
+    text = re.sub('|'.join(map(re.escape, sad)), ' sad ', text)
+    text = re.sub(r'[^a-zA-Z\s]', ' ', text, flags=re.MULTILINE)
     text = re.sub(r'(\w)(\1{2,})', lambda m: m.group(1) + m.group(1), text, flags=re.MULTILINE)
     text = re.sub(r'\s+', ' ', text)
 
