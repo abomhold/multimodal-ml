@@ -29,7 +29,6 @@ function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
-  #pip install -r requirements.txt &>/dev/null 
   python3 main.py "$INPUTPATH" "$OUTPUTPATH"
 
 }
