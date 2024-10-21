@@ -15,18 +15,18 @@ data = df[['text', target]]
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(data['text'], data[target], test_size=0.3, random_state=42)
 
-# # Create a pipeline with CountVectorizer and Naive Bayes
-# pipeline = Pipeline([
-#     ('count_vec', CountVectorizer()),
-#     ('nb', MultinomialNB()),
-# ])
-
 # Create a pipeline with CountVectorizer and Naive Bayes
 pipeline = Pipeline([
-    ('count_vec', TfidfVectorizer()),
-    # ('svm', SVC(kernel='rbf')),
-    ('nb', LogisticRegression(random_state=42, max_iter=100))
+    ('count_vec', CountVectorizer()),
+    ('nb', MultinomialNB()),
 ])
+
+# Create a pipeline with CountVectorizer and Naive Bayes
+# pipeline = Pipeline([
+#     ('count_vec', TfidfVectorizer()),
+#     # ('svm', SVC(kernel='rbf')),
+#     ('nb', LogisticRegression(random_state=42, max_iter=100))
+# ])
 
 # Perform 10-fold cross-validation
 cv_scores = cross_val_score(pipeline, X_train, y_train, cv=10)
@@ -35,6 +35,7 @@ print("10-fold CV Average Accuracy: {:.3f} (+/- {:.3f})".format(cv_scores.mean()
 # Train and test model
 pipeline.fit(X_train, y_train)
 y_pred = pipeline.predict(X_test)
+print(y_pred)
 
 # Print confusion matrix
 print("\nConfusion Matrix:")
