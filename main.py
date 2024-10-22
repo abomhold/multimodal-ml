@@ -17,7 +17,7 @@ def main():
 
     pre.build_baseline()
 
-    text_main.main(config.INPUT_PATH, config.OUTPUT_PATH)
+    text_main.main()
 
     image_testrun.train(config.IMAGE_TRAIN_PATH, config.CLASS_TRAIN_PATH, device)
 
