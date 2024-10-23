@@ -6,15 +6,14 @@ import preprocessing as pre
 import pandas as pd
 import postprocessing as post
 
-import image.image_testrun as image_testrun
-import torch
 
 import image.image_testrun as image_testrun
 import torch
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+import image.image_testrun as image_testrun
+import torch
 
-# def collate_data():
+device = "gpu" if torch.cuda.is_available() else "cpu"
 
 
 def main():
@@ -28,10 +27,9 @@ def main():
     # Text preprocessing
     # data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     # print(data)
-
-    image_testrun.train(input_path.joinpath(config.IMAGE_DIR), data, device)
     data = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
 #    result.to_csv('result.csv', index=False)
+
     post.write_xml(Path(config.OUTPUT_PATH), data)
 
 
