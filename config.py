@@ -1,7 +1,14 @@
+INPUT_PATH: str = "training/"
+OUTPUT_PATH: str = "output/"
+TRAIN_PATH = "training"
+TEXT_DIR = "text"
+IMAGE_DIR = "image"
+LIKE_DIR = "relation"
+LIWC_DIR = "LIWC"
+PROFILE_PATH = "profile/profile.csv"
 
-PROFILE_PATH = "tcss555/training/profile/profile.csv" 
-INPUT_PATH: str
-OUTPUT_PATH: str = "output"
+IMAGE_TRAIN_PATH = f"{INPUT_PATH}/training/image"
+CLASS_TRAIN_PATH = f"{INPUT_PATH}/training/profile/profile.csv"
 
 
 def get_configs():
