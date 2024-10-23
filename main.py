@@ -12,9 +12,7 @@ import torch
 import image.image_testrun as image_testrun
 import torch
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# def collate_data():
+device = "gpu" if torch.cuda.is_available() else "cpu"
 
 
 def main():
@@ -25,13 +23,8 @@ def main():
     input_path = Path(config.INPUT_PATH)
     data = pre.main(input_path.joinpath(config.PROFILE_PATH))
 
-    # Text preprocessing
-    # data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
-    # print(data)
-
-    image_testrun.train(input_path.joinpath(config.IMAGE_DIR), data, device)
     data = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
-#    result.to_csv('result.csv', index=False)
+    #    result.to_csv('result.csv', index=False)
     post.write_xml(Path(config.OUTPUT_PATH), data)
 
 
