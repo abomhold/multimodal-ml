@@ -7,10 +7,8 @@ LIKE_DIR = "relation"
 LIWC_DIR = "LIWC"
 PROFILE_DIR = "profile"
 
-IMAGE_TRAIN_PATH = "dataset/training/image"
-CLASS_TRAIN_PATH = "dataset/training/profile/profile.csv"
-IMAGE_TEST_PATH = "dataset/public-test-data/image"
-CLASS_TEST_PATH = "dataset/public-test-data/profile/profile.csv"
+IMAGE_TRAIN_PATH = f"{INPUT_PATH}/training/image"
+CLASS_TRAIN_PATH = f"{INPUT_PATH}/training/profile/profile.csv"
 
 
 def get_configs():
