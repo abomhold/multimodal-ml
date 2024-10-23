@@ -1,9 +1,14 @@
-INPUT_PATH: str
-OUTPUT_PATH: str
-IMAGE_TRAIN_PATH = "dataset/training/image"
-CLASS_TRAIN_PATH = "dataset/training/profile/profile.csv"
-IMAGE_TEST_PATH = "dataset/public-test-data/image"
-CLASS_TEST_PATH = "dataset/public-test-data/profile/profile.csv"
+INPUT_PATH: str = "training/"
+OUTPUT_PATH: str = "output/"
+TRAIN_PATH = "training"
+TEXT_DIR = "text"
+IMAGE_DIR = "image"
+LIKE_DIR = "relation"
+LIWC_DIR = "LIWC"
+PROFILE_PATH = "profile/profile.csv"
+
+#IMAGE_TRAIN_PATH = f"training/image"
+#CLASS_TRAIN_PATH = f"training/profile/profile.csv"
 
 
 def get_configs():
