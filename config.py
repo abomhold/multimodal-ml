@@ -7,8 +7,8 @@ LIKE_DIR = "relation"
 LIWC_DIR = "LIWC"
 PROFILE_PATH = "profile/profile.csv"
 
-IMAGE_TRAIN_PATH = f"training/image"
-CLASS_TRAIN_PATH = f"training/profile/profile.csv"
+#IMAGE_TRAIN_PATH = f"training/image"
+#CLASS_TRAIN_PATH = f"training/profile/profile.csv"
 
 
 def get_configs():

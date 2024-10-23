@@ -29,7 +29,7 @@ def main():
     # data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     # print(data)
 
-    image_testrun.train(config.IMAGE_TRAIN_PATH, config.CLASS_TRAIN_PATH, device)
+    image_testrun.train(input_path.joinpath(config.IMAGE_DIR), data, device)
     data = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
 #    result.to_csv('result.csv', index=False)
     post.write_xml(Path(config.OUTPUT_PATH), data)
