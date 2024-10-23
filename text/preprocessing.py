@@ -61,7 +61,6 @@ def main():
 
     # Read the profile CSV
     df = pd.read_csv(profile_path, index_col="userid")
-    df = df.drop(columns=["Unnamed: 0"], errors='ignore')
 
     # Process text files
     user_texts = process_text_files(text_path)
