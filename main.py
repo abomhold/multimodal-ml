@@ -29,8 +29,6 @@ def main():
     # data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     # print(data)
 
-    data = image_testrun.test(config.IMAGE_DIR, data, device)
-
     image_testrun.train(config.IMAGE_TRAIN_PATH, config.CLASS_TRAIN_PATH, device)
     data = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
 #    result.to_csv('result.csv', index=False)
