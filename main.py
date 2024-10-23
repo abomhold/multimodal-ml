@@ -5,8 +5,8 @@ import text.preprocessing
 import preprocessing as pre
 import postprocessing as post
 
-import image.image_testrun as image_testrun
-import torch
+# import image.image_testrun as image_testrun
+# import torch
 
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -26,8 +26,7 @@ def main():
     # print(data)
 
     # result = image_testrun.test(config.IMAGE_TEST_PATH, data, device)
-
-    post.write_xml(data)
+    post.write_xml(Path(config.OUTPUT_PATH), data)
 
 
 
