@@ -25,7 +25,7 @@ def main():
     data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     print(data)
 
-    result = image_testrun.test(config.IMAGE_TEST_PATH, config.CLASS_TEST_PATH, device)
+    result = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
 
 
 if __name__ == "__main__":

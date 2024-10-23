@@ -7,7 +7,6 @@ from torch.utils.data import DataLoader, TensorDataset, random_split
 from torchvision.transforms import v2
 from image.image_config import WIDTH, HEIGHT
 
-
 transforms = v2.Compose([
     v2.Resize([WIDTH, HEIGHT]),
     v2.ToImage(),
@@ -70,3 +69,10 @@ def split_train_val_dataset(dataset, train_size=0.8, batch_size=32):
 
     return train_loader, val_loader
 
+
+def process_dataframe(df):
+    ids = df["userid"]
+    genders = df["gender"].astype(int)
+    assert genders.isin([0, 1]).all(), "Gender column contains invalid values"
+    classes = {user_id: gender for user_id, gender in zip(ids, genders)}
+    return classes

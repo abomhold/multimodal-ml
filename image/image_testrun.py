@@ -1,12 +1,13 @@
 from image.image_preprocessing import preprocess_image
-from image.image_utils import get_classes, get_image, create_dataset, split_train_val_dataset, match_userid_image
+from image.image_utils import get_classes, get_image, create_dataset, split_train_val_dataset, match_userid_image, process_dataframe
 from image.image_model import get_pretrained_vgg16
 import torch.optim as optim
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.optim import lr_scheduler
 import itertools
-from torch.utils.data import random_split
+import pandas as pd
 
 
 def save_model_weights(model, path="vgg16_weights.pth"):
@@ -99,10 +100,9 @@ def validate(model, val_loader, criterion, device):
     model.train()
 
 
-def test(test_image_path, test_class_path, device):
-    predicted_dict = {}
+def test(test_image_path, dataframe, device):
     test_image = get_image(test_image_path)
-    test_classes = get_classes(test_class_path)
+    test_classes = process_dataframe(dataframe)
 
     matched_dict = match_userid_image(test_image, test_classes)
 
@@ -116,6 +116,7 @@ def test(test_image_path, test_class_path, device):
             image = image.unsqueeze(0)
 
             output = model(image)
-            predicted_dict[user_id] = output
+            output = F.sigmoid(output)
+            dataframe.loc[dataframe['userid'] == user_id, 'gender'] = output.item()
 
-    return predicted_dict
+    return dataframe
