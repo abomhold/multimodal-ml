@@ -1,0 +1,36 @@
+#!/bin/bash
+set -oue pipefail
+# Globals:
+INPUTPATH="input"
+OUTPUTPATH="output"
+
+function parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -i | --input)
+        INPUTPATH="$2"
+        shift # past argument
+        shift # past value
+        ;;
+      -o | --output)
+        OUTPUTPATH="$2"
+        shift # past argument
+        shift # past value
+        ;;
+      *)
+        echo "Unknown option"
+        exit 1
+        ;;
+    esac
+  done
+}
+
+function main() {
+  parse_args "$@"
+  rm -rf "$OUTPUTPATH"
+  mkdir -p "$OUTPUTPATH"
+  python3 main.py "$INPUTPATH" "$OUTPUTPATH"
+
+}
+
+main "$@"

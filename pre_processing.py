@@ -1,32 +1,6 @@
 import os
-
 import pandas as pd
-from config import PROFILE_PATH
-
-from config import PROFILE_PATH, OUTPUT_PATH
-
-
-def get_most_gender():
-    data = pd.read_csv(PROFILE_PATH)
-    mode_gender = data["gender"].mode()[0]
-    return mode_gender
-
-
-def get_most_age():
-    data = pd.read_csv(PROFILE_PATH)
-    mode_age = data["age"].mode()[0]
-    return mode_age
-
-
-def get_avg_personality():
-    data = pd.read_csv(PROFILE_PATH)
-    avg_ope = data["ope"].mean()
-    ave_con = data["con"].mean()
-    ave_ext = data["ext"].mean()
-    ave_agr = data["agr"].mean()
-    ave_neu = data["neu"].mean()
-
-    return avg_ope, ave_con, ave_ext, ave_agr, ave_neu
+import config
 
 
 def row_to_xml(row):
@@ -47,19 +21,22 @@ def row_to_xml(row):
 
     )
 
-    with open(f"{OUTPUT_PATH}/{userid}.xml", "w") as f:
-        f.write(f"<user id=\"{userid}\" "
-                f"age_group=\"xx-{age}\" "
-                f"gender=\"{gender}\" "
-                f"extrovert=\"{ext:.3f}\" "
-                f"neurotic=\"{neu:.3f}\" "
-                f"agreeable=\"{agr:.3f}\" "
-                f"conscientiousness=\"{con:.3f}\" "
-                f"open=\"{ope:.3f}\" />")
+    xml_string = (f"<user id=\"{userid}\" "
+                  f"age_group=\"xx-{age}\" "
+                  f"gender=\"{gender}\" "
+                  f"extrovert=\"{ext:.3f}\" "
+                  f"neurotic=\"{neu:.3f}\" "
+                  f"agreeable=\"{agr:.3f}\" "
+                  f"conscientiousness=\"{con:.3f}\" "
+                  f"open=\"{ope:.3f}\" />")
+
+    # print(xml_string)
+    with open(f"{config.OUTPUT_PATH}/{userid}.xml", "w") as f:
+        f.write(xml_string)
 
 
 def build_baseline():
-    data = pd.read_csv(PROFILE_PATH)
+    data = pd.read_csv(config.INPUT_PATH + "profile/profile.csv")
     data["gender"] = data["gender"].mode()[0]
     data["age"] = data["age"].mode()[0]
     data["ope"] = data["ope"].mean()
@@ -68,6 +45,9 @@ def build_baseline():
     data["agr"] = data["agr"].mean()
     data["neu"] = data["neu"].mean()
 
-    os.mkdir(OUTPUT_PATH)
     for row in data.iterrows():
         row_to_xml(row)
+
+
+if __name__ == "__main__":
+    build_baseline()
