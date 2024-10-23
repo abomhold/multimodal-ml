@@ -4,12 +4,15 @@ import config
 import text.preprocessing
 import preprocessing as pre
 import pandas as pd
+import postprocessing as post
+
+import image.image_testrun as image_testrun
+import torch
 
 import image.image_testrun as image_testrun
 import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
 
 # def collate_data():
 
@@ -23,12 +26,15 @@ def main():
     data = pre.main(input_path.joinpath(config.PROFILE_PATH))
 
     # Text preprocessing
-    data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
-    print(data)
+    # data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
+    # print(data)
+
+    data = image_testrun.test(config.IMAGE_DIR, data, device)
 
     image_testrun.train(config.IMAGE_TRAIN_PATH, config.CLASS_TRAIN_PATH, device)
-#    result = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
+    data = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
 #    result.to_csv('result.csv', index=False)
+    post.write_xml(Path(config.OUTPUT_PATH), data)
 
 
 if __name__ == "__main__":
