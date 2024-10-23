@@ -1,10 +1,11 @@
 from image.image_preprocessing import preprocess_image
-from image.image_utils import get_classes, get_image, create_dataset, split_train_val_dataset
+from image.image_utils import get_classes, get_image, create_dataset, split_train_val_dataset, match_userid_image
 from image.image_model import get_pretrained_vgg16
 import torch.optim as optim
 import torch
 import torch.nn as nn
 from torch.optim import lr_scheduler
+import itertools
 from torch.utils.data import random_split
 
 
@@ -99,24 +100,22 @@ def validate(model, val_loader, criterion, device):
 
 
 def test(test_image_path, test_class_path, device):
+    predicted_dict = {}
     test_image = get_image(test_image_path)
     test_classes = get_classes(test_class_path)
-    test_loader = create_dataset(test_image, test_classes)
+
+    matched_dict = match_userid_image(test_image, test_classes)
 
     model = load_pretrained_model(num_classes=2, path='vgg16_weights.pth', device=device)
 
     model.eval()
-    correct = 0
-    total = 0
-
     with torch.no_grad():
-        for images, labels in test_loader:
-            images, labels = images.to(device), labels.to(device)
+        for user_id, (image, label) in itertools.islice(matched_dict.items(), 5):
+            image = image.to(device)
 
-            outputs = model(images)
-            _, predicted = torch.max(outputs, 1)
-            total += 1
-            correct += (outputs == labels).sum().item()
+            image = image.unsqueeze(0)
 
-        test_accuracy = correct / total
-        print(f'Final Test Accuracy: {test_accuracy * 100:.2f}')
+            output = model(image)
+            predicted_dict[user_id] = output
+
+    return predicted_dict

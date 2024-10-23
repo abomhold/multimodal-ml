@@ -5,11 +5,10 @@ import text.preprocessing
 import preprocessing as pre
 
 
-# import image.image_testrun as image_testrun
-# import torch
+import image.image_testrun as image_testrun
+import torch
 
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # def collate_data():
 
@@ -26,8 +25,7 @@ def main():
     data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     print(data)
 
-    #
-    # image_testrun.test(config.IMAGE_TEST_PATH, config.CLASS_TEST_PATH, device)
+    result = image_testrun.test(config.IMAGE_TEST_PATH, config.CLASS_TEST_PATH, device)
 
 
 if __name__ == "__main__":
