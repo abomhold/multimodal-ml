@@ -1,14 +1,12 @@
-import os
-from pathlib import Path
 import re
-import unicodedata
+from pathlib import Path
 from typing import Dict
-import pandas as pd
+
 import nltk
-from pandas.core.interchange.dataframe_protocol import DataFrame
+import pandas as pd
 
 # Ensure necessary downloads for nltk
-nltk.download(['punkt', 'stopwords', 'wordnet'], quiet=True)
+nltk.download(['punkt', 'punkt_tab', 'stopwords', 'wordnet'], quiet=True)
 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -32,8 +30,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r'(\w)(\1{2,})', lambda m: m.group(1) + m.group(1), text, flags=re.MULTILINE)
     text = re.sub(r'\s+', ' ', text)
 
-    words = [lemmatizer.lemmatize(word) for word in word_tokenize(text)
-             if word.lower() not in stop_words]
+    words = [lemmatizer.lemmatize(word) for word in word_tokenize(text) if word.lower() not in stop_words]
 
     return ' '.join(words).lower()
 

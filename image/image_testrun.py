@@ -110,7 +110,7 @@ def test(test_image_path, dataframe, device):
 
     model.eval()
     with torch.no_grad():
-        for user_id, (image, label) in itertools.islice(matched_dict.items(), 5):
+        for user_id, (image, label) in matched_dict.items():
             image = image.to(device)
 
             image = image.unsqueeze(0)

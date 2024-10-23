@@ -3,12 +3,13 @@ from pathlib import Path
 import config
 import text.preprocessing
 import preprocessing as pre
-
+import pandas as pd
 
 import image.image_testrun as image_testrun
 import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 # def collate_data():
 
@@ -25,7 +26,9 @@ def main():
     data = text.preprocessing.main(input_path.joinpath(config.TEXT_DIR), data)
     print(data)
 
-    result = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
+    image_testrun.train(config.IMAGE_TRAIN_PATH, config.CLASS_TRAIN_PATH, device)
+#    result = image_testrun.test(input_path.joinpath(config.IMAGE_DIR), data, device)
+#    result.to_csv('result.csv', index=False)
 
 
 if __name__ == "__main__":
