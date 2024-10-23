@@ -117,6 +117,7 @@ def test(test_image_path, dataframe, device):
 
             output = model(image)
             output = F.sigmoid(output)
+
             result = "Male" if output.item() < 0.5 else "Female"
             dataframe.loc[dataframe['userid'] == user_id, 'gender'] = result
 

@@ -6,6 +6,7 @@ import nltk
 import pandas as pd
 from nltk import word_tokenize
 
+
 # Ensure necessary downloads for nltk
 nltk.download(['punkt', 'punkt_tab', 'stopwords', 'wordnet'], quiet=True)
 
@@ -31,6 +32,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r'\s+', ' ', text)
 
     words = [lemmatizer.lemmatize(word) for word in word_tokenize(text) if word.lower() not in stop_words]
+
     return ' '.join(words).lower()
 
 
