@@ -4,7 +4,8 @@ from torchvision import models
 
 
 def get_pretrained_vgg16(num_classes=2, freeze_features=True):
-    model = models.vgg16(pretrained=True)
+    model = models.vgg16()
+    model.load_state_dict(torch.load('../vgg16-397923af.pth'))
 
     if freeze_features:
         for param in model.parameters():
