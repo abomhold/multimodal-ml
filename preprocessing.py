@@ -9,6 +9,11 @@ def profile_cvs(path: Path) -> pd.DataFrame:
     data = data.drop(columns=["Unnamed: 0"], errors='ignore')
     return data
 
+def lwic_cvs(path: Path) -> pd.DataFrame:
+    data = pd.read_csv(path)
+    data = data.drop(columns=["Unnamed: 0"], errors='ignore')
+    return data
+
 
 def main(path: Path) -> pd.DataFrame:
     return profile_cvs(path)

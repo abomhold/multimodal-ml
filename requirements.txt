@@ -1,7 +1,6 @@
 pandas~=2.2.3
 bottleneck == 1.4.0
 pathlib~=1.0.1
-
 torch~=2.5.0
 torchvision~=0.20.0
 pillow~=11.0.0
