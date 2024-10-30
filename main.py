@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 # import pandas as pd
 import config
-import text
+import text.main as text
 import image
 import like
 import preprocessing as pre
@@ -21,18 +21,19 @@ def parse_args(args: list):
     else:
         config.set_paths(config.TEST_PATH, "output")
     print(config.get_configs())
-    pass
 
 
 def main():
     parse_args(sys.argv)
-    data = pre.main(config.PROFILE_PATH)
-    text_df = text.test.main(config.TEXT_DIR, data.copy())
+    data = pre.main()
+    print(data)
+    text_df = text.main(config.TEXT_DIR, data.copy())
     image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
     like_df = like.test.main(config.LIKE_DIR, data.copy())
+
     combined_df = post.majority(text_df, image_df, like_df)
     post.write_xml(config.OUTPUT_PATH, combined_df)
-[]
+
 
 if __name__ == "__main__":
     main()
