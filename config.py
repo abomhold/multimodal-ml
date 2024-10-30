@@ -6,6 +6,7 @@ IMAGE_DIR = "image"
 LIKE_DIR = "relation"
 LIWC_DIR = "LIWC"
 PROFILE_PATH = "profile/profile.csv"
+TEST_PATH = "dataset/public-test-data/"
 
 #IMAGE_TRAIN_PATH = f"training/image"
 #CLASS_TRAIN_PATH = f"training/profile/profile.csv"

@@ -1,5 +1,3 @@
-import os
-# import matplotlib.pyplot as plt
 from PIL import Image
 import pandas as pd
 import torch
@@ -17,11 +15,14 @@ transforms = v2.Compose([
 
 def get_image(image_dir):
     images = {}
-    for image_file in os.listdir(image_dir):
-        image_path = os.path.join(image_dir, image_file)
-        with Image.open(image_path) as image:
-            image_name = image_file.removesuffix('.jpg')
-            images[image_name] = transforms(image)
+    for image_file in image_dir.iterdir():
+        try:
+            original_image = Image.open(image_file)
+            image_copy = original_image.copy()
+            augmented_image = transforms(image_copy)
+            images[image_file.stem] = augmented_image
+        except IOError:
+            print(f"Error opening image: {image_file}")
     return images
 
 
