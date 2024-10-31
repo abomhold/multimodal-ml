@@ -45,8 +45,11 @@ function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
-  podman pull ghcr.io/abomhold/multimodal-ml:main
-  podman run -v "$INPUTPATH":/mnt/input:Z -v "$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main
+  podman build . -t 555
+  podman run -v "$INPUTPATH":/mnt/input:Z -v "$OUTPUTPATH":/mnt/output:Z 555
+
+#  podman pull ghcr.io/abomhold/multimodal-ml:main
+#  podman run -v "$INPUTPATH":/mnt/input:Z -v "$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main
 }
 
 main "$@"
