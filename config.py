@@ -26,6 +26,10 @@ def get_configs():
     print(f"[LOCAL]\ntest path: {TEST_PATH}")
 
 
+if __name__ == '__main__':
+    # set_paths("input", "output")
+    get_configs()
+
 # def set_paths(the_input: str, the_output: str):
 #     global INPUT_PATH, OUTPUT_PATH, TEXT_DIR, IMAGE_DIR, LIKE_DIR, LIWC_PATH, PROFILE_PATH, TEST_PATH
 #
@@ -42,8 +46,3 @@ def get_configs():
 #     LIKE_DIR = INPUT_PATH.joinpath("like")
 #     LIWC_PATH = INPUT_PATH.joinpath("LIWC/LIWC.csv")
 #     PROFILE_PATH = INPUT_PATH.joinpath("profile/profile.csv")
-
-
-if __name__ == '__main__':
-    # set_paths("input", "output")
-    get_configs()
