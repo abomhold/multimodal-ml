@@ -1,7 +1,7 @@
 #!/bin/bash
 set -oue pipefail
 # Globals:
-INPUTPATH="training/"
+INPUTPATH="/home/austin/UW/multimodal-ml/training"
 OUTPUTPATH="output"
 
 function parse_args() {
@@ -30,11 +30,9 @@ function main() {
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
   podman build -t local555:main .
-  podman run -v "$(pwd)/$INPUTPATH":/mnt/input:Z -v \
-                "$(pwd)/$OUTPUTPATH":/mnt/output:Z \
-                local555:main \
-                /mnt/input \
-                /mnt/output
+  podman run -v "$INPUTPATH":/mnt/input:Z \
+             -v "$OUTPUTPATH":/mnt/output:Z \
+                local555:main
 }
 
 main "$@"

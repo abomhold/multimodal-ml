@@ -18,6 +18,7 @@ model_name = 'resnet50'
 def main():
     print("Starting...")
     data = pre.main()
+    config.get_configs()
     text_df = text.main(config.TEXT_DIR, data.copy())
     #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
     #like_df = data
