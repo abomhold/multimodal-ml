@@ -1,8 +1,9 @@
 #!/bin/bash
 set -oue pipefail
 # Globals:
-INPUTPATH="/home/austin/UW/multimodal-ml/training"
+INPUTPATH="input"
 OUTPUTPATH="output"
+
 
 function parse_args() {
   while [[ $# -gt 0 ]]; do
@@ -25,14 +26,22 @@ function parse_args() {
   done
 }
 
+#######################################
+# description
+# Globals:
+#   INPUTPATH
+#   OUTPUTPATH
+# Arguments:
+#  None
+#######################################
 function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
   podman build -t local555:main .
   podman run -v "$INPUTPATH":/mnt/input:Z \
-             -v "$OUTPUTPATH":/mnt/output:Z \
-                local555:main
+    -v "$OUTPUTPATH":/mnt/output:Z \
+    local555:main
 }
 
 main "$@"

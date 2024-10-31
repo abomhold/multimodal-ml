@@ -12,7 +12,7 @@ def write_predictions(data, results):
 
 
 def load_model() -> DataFrame:
-    return joblib.load('text/model.pkl')
+    return joblib.load('model.pkl')
 
 
 def test(data: DataFrame) -> DataFrame:
