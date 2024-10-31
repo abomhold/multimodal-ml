@@ -16,13 +16,13 @@ model_name = 'resnet50'
 
 
 def main():
-    print("I MADE IT HERE")
+    print("Starting...")
     data = pre.main()
     text_df = text.main(config.TEXT_DIR, data.copy())
-    image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
-    like_df = data
-    combined_df = post.majority(text_df, image_df, like_df)
-    post.write_xml(config.OUTPUT_PATH, combined_df)
+    #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
+    #like_df = data
+    #combined_df = post.majority(text_df, image_df, like_df)
+    post.write_xml(config.OUTPUT_PATH, text_df)
     print("Done!")
 
 if __name__ == "__main__":
