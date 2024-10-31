@@ -163,4 +163,6 @@ cython_debug/
 training/
 public-test-data/
 dataset
+cloud-assets/
+*.zip
 

@@ -1,7 +1,17 @@
 import os
 from pathlib import Path
+
+import gdown
 import pandas as pd
+
 import config
+
+
+def download_cloud_assets():
+    if not os.path.exists("cloud_assets"):
+        os.mkdir("cloud_assets")
+    gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
+    os.system("unzip cloud_assets.zip -d cloud_assets")
 
 
 def profile_cvs(path: Path) -> pd.DataFrame:
@@ -22,67 +32,16 @@ def combine_data(profile: pd.DataFrame, lwic: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def main():
-    data = combine_data(
-        profile_cvs(config.PROFILE_PATH),
-        lwic_cvs(config.LIWC_PATH)
-    )
+def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
+    data = combine_data(profile_cvs(profile_path), lwic_cvs(lwic_path))
     return data
 
 
-def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
-    data = combine_data(
-        profile_cvs(profile_path),
-        lwic_cvs(lwic_path)
-    )
+def main():
+
+    data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 
 
 if __name__ == '__main__':
-    main()
-
-# def row_to_xml(row):
-#     row = row[1]
-#
-#     userid, age, gender = (
-#         row["userid"],
-#         row["age"],
-#         row["gender"]
-#     )
-#
-#     ope, con, ext, agr, neu = (
-#         row["ope"],
-#         row["con"],
-#         row["ext"],
-#         row["agr"],
-#         row["neu"]
-#
-#     )
-#
-#     xml_string = (f"<user id=\"{userid}\" "
-#                   f"age_group=\"xx-{age}\" "
-#                   f"gender=\"{gender}\" "
-#                   f"extrovert=\"{ext:.3f}\" "
-#                   f"neurotic=\"{neu:.3f}\" "
-#                   f"agreeable=\"{agr:.3f}\" "
-#                   f"conscientiousness=\"{con:.3f}\" "
-#                   f"open=\"{ope:.3f}\" />")
-#
-#     # print(xml_string)
-#     with open(f"{config.OUTPUT_PATH}/{userid}.xml", "w") as f:
-#         f.write(xml_string)
-#
-#
-# def build_baseline():
-#     data = pd.read_csv(config.INPUT_PATH + "profile/profile.csv")
-#     data["gender"] = data["gender"].mode()[0]
-#     data["age"] = data["age"].mode()[0]
-#     data["ope"] = data["ope"].mean()
-#     data["con"] = data["con"].mean()
-#     data["ext"] = data["ext"].mean()
-#     data["agr"] = data["agr"].mean()
-#     data["neu"] = data["neu"].mean()
-#
-#     for row in data.iterrows():
-#         row_to_xml(row)
-#
+    download_cloud_assets()
