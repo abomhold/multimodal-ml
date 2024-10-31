@@ -38,10 +38,10 @@ def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
 
 
 def main():
-
     data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 
 
+# DON'T TOUCH THE CODE BELOW
 if __name__ == '__main__':
     download_cloud_assets()
