@@ -1,7 +1,5 @@
 import subprocess
 import sys
-
-
 import torch
 import config
 import postprocessing as post
