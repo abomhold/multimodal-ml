@@ -15,16 +15,8 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = 'resnet50'
 
 
-def parse_args(args: list):
-    if len(args) == 3:
-        config.set_paths(args[1], args[2])
-    else:
-        config.set_paths(config.TEST_PATH, "output")
-    # print(config.get_configs())
-
-
 def main():
-    parse_args(sys.argv)
+    print("I MADE IT HERE")
     data = pre.main()
     text_df = text.main(config.TEXT_DIR, data.copy())
     image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)

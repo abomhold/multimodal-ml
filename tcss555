@@ -1,7 +1,7 @@
 #!/bin/bash
 set -oue pipefail
 # Globals:
-INPUTPATH="input"
+INPUTPATH="training/"
 OUTPUTPATH="output"
 
 function parse_args() {
@@ -29,8 +29,9 @@ function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
-  podman build . -t team1
-  podman run team1 "$INPUTPATH" "$OUTPUTPATH"
+  podman pull ghcr.io/abomhold/multimodal-ml:main
+  podman run -v "$(pwd)/$INPUTPATH":/mnt/input:Z -v "$(pwd)/$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main /mnt/input /mnt/output
+#  podman run ghcr.io/abomhold/multimodal-ml:main "$INPUTPATH" "$OUTPUTPATH"
 }
 
 main "$@"
