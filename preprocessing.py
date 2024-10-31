@@ -22,10 +22,18 @@ def combine_data(profile: pd.DataFrame, lwic: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def main() -> pd.DataFrame:
+def main():
     data = combine_data(
         profile_cvs(config.PROFILE_PATH),
         lwic_cvs(config.LIWC_PATH)
+    )
+    return data
+
+
+def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
+    data = combine_data(
+        profile_cvs(profile_path),
+        lwic_cvs(lwic_path)
     )
     return data
 

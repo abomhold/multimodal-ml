@@ -51,6 +51,7 @@ def main(path: Path, data: pd.DataFrame):
     user_texts = process_text_files(path)
     # Create a new DataFrame with the texts
     text_df = pd.DataFrame.from_dict(user_texts, orient='index', columns=['text'])
+    # print(text_df)
     text_df.index.name = 'userid'
     data.set_index('userid', inplace=True)
     combined_df = data.join(text_df, how='inner').reset_index()
