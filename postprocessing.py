@@ -25,7 +25,11 @@ def write_xml(path: Path, data: pd.DataFrame):
 def row_to_xml(row, path: Path):
     row = row[1]
 
-    userid, age, gender = (row["userid"], row["age"], row["gender"])
+    userid, age = (row["userid"], row["age"])
+    if row["gender"] == 0:
+        gender = "male"
+    else:
+        gender = "female"
 
     ope, con, ext, agr, neu = (row["ope"], row["con"], row["ext"], row["agr"], row["neu"]
 
