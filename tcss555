@@ -31,7 +31,6 @@ function main() {
   mkdir -p "$OUTPUTPATH"
   podman pull ghcr.io/abomhold/multimodal-ml:main
   podman run -v "$(pwd)/$INPUTPATH":/mnt/input:Z -v "$(pwd)/$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main /mnt/input /mnt/output
-#  podman run ghcr.io/abomhold/multimodal-ml:main "$INPUTPATH" "$OUTPUTPATH"
 }
 
 main "$@"
