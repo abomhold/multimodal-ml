@@ -4,7 +4,14 @@ set -oue pipefail
 INPUTPATH="input"
 OUTPUTPATH="output"
 
-
+#######################################
+# description
+# Globals:
+#   INPUTPATH
+#   OUTPUTPATH
+# Arguments:
+#  None
+#######################################
 function parse_args() {
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -26,15 +33,20 @@ function parse_args() {
   done
 }
 
+#######################################
+# description
+# Globals:
+#   INPUTPATH
+#   OUTPUTPATH
+# Arguments:
+#  None
+#######################################
 function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
   mkdir -p "$OUTPUTPATH"
-  podman build -t local555:main .
-  podman run -v "$INPUTPATH":/mnt/input:Z \
-    -v "$OUTPUTPATH":/mnt/output:Z \
-    local555:main
+  podman pull ghcr.io/abomhold/multimodal-ml:main
+  podman run -v "$INPUTPATH":/mnt/input:Z -v "$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main
 }
 
 main "$@"
-#  podman pull ghcr.io/abomhold/multimodal-ml:main
