@@ -26,14 +26,6 @@ function parse_args() {
   done
 }
 
-#######################################
-# description
-# Globals:
-#   INPUTPATH
-#   OUTPUTPATH
-# Arguments:
-#  None
-#######################################
 function main() {
   parse_args "$@"
   rm -rf "$OUTPUTPATH"
