@@ -1,5 +1,6 @@
 import subprocess
 import sys
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 import torch
 import config
 import postprocessing as post
@@ -23,5 +24,4 @@ def main():
 
 
 if __name__ == "__main__":
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
     main()
