@@ -1,6 +1,11 @@
 import subprocess
 import sys
+
 subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+############################################################################################################
+# DON'T CHANGE ANYTHING ABOVE THIS
+############################################################################################################
+
 import torch
 import config
 import postprocessing as post
@@ -11,6 +16,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = 'resnet50'
 
 
+# LEAVE THIS UNTIL AFTER 0900, I need to be graded
 def main():
     print("Starting...")
     data = pre.main()
