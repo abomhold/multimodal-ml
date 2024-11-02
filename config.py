@@ -7,7 +7,7 @@ TEST_PATH = Path("public-test-data")
 
 TEXT_DIR = INPUT_PATH.joinpath("text")
 IMAGE_DIR = INPUT_PATH.joinpath("image")
-LIKE_DIR = INPUT_PATH.joinpath("like")
+LIKE_DIR = INPUT_PATH.joinpath("relation")
 LIWC_PATH = INPUT_PATH.joinpath("LIWC/LIWC.csv")
 PROFILE_PATH = INPUT_PATH.joinpath("profile/profile.csv")
 
