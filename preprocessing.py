@@ -1,8 +1,5 @@
-import argparse
-import os
 from pathlib import Path
 
-import gdown
 import pandas as pd
 
 import config
@@ -18,14 +15,15 @@ import config
 def profile_cvs(path: Path) -> pd.DataFrame:
     data = pd.read_csv(path).dropna()
     data = data.drop(columns=["Unnamed: 0"], errors='ignore')
-    data["userid"] = data["userid"].astype(str)
-    data["age"] = data["age"].astype(str)
-    data["gender"] = data["gender"].astype(str)
-    data["ope"] = data["ope"].astype(float)
-    data["con"] = data["con"].astype(float)
-    data["ext"] = data["ext"].astype(float)
-    data["agr"] = data["agr"].astype(float)
-    data["neu"] = data["neu"].astype(float)
+
+    data["userid"] = data["userid"]
+    data["age"] = data["age"].apply(lambda x: "xx-00" if x == "xx-xx" else x)
+    data["gender"] = data["gender"].apply(lambda x: 0 if x == "-" else x)
+    data["ope"] = data["ope"].apply(lambda x: 0.0 if x == "-" else x)
+    data["con"] = data["con"].apply(lambda x: 0.0 if x == "-" else x)
+    data["ext"] = data["ext"].apply(lambda x: 0.0 if x == "-" else x)
+    data["agr"] = data["agr"].apply(lambda x: 0.0 if x == "-" else x)
+    data["neu"] = data["neu"].apply(lambda x: 0.0 if x == "-" else x)
     return data
 
 
