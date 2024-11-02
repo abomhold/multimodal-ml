@@ -5,7 +5,7 @@ subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requiremen
 ############################################################################################################
 # DON'T CHANGE ANYTHING ABOVE THIS
 ############################################################################################################
-
+import argparse
 import torch
 import config
 import postprocessing as post
@@ -27,6 +27,9 @@ def main():
     # combined_df = post.majority(text_df, image_df, like_df)
     post.write_xml(config.OUTPUT_PATH, text_df)
     print("Done!")
+
+
+
 
 
 if __name__ == "__main__":
