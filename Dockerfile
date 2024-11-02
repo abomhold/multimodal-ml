@@ -1,7 +1,14 @@
-FROM python:3.12.7-bookworm
+FROM python:3.12.7-bookworm as BUILD
 LABEL authors="austin"
-COPY . /home
 WORKDIR /home
-#RUN pip3 install -r requirements.txt
+COPY ./requirements.txt ./requirements.txt
+RUN pip3 install -r requirements.txt
+COPY ./get_cloud.py ./get_cloud.py
+COPY ./config.py ./config.py
+RUN python3 get_cloud.py
+
+FROM BUILD as RUN
+WORKDIR /home
+COPY . .
 ENTRYPOINT ["python3", "/home/main.py"]
 #ENTRYPOINT ["bash"]

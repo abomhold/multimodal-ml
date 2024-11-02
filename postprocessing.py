@@ -30,15 +30,15 @@ def row_to_xml(row, path: Path):
     else:
         gender = "female"
 
-    xml_string = (f"<user id=\"{row["userid"].astype(str)}\" "
-                  f"age_group=\"xx-{row["age"].astype(str)}\" "
+    xml_string = (f"<user id=\"{row["userid"]}\" "
+                  f"age_group=\"xx-{row["age"]}\" "
                   f"gender=\"{gender}\" "
-                  f"extrovert=\"{row["ext"].astype(float)}\" "
-                  f"neurotic=\"{row["neu"].astype(float)}\" "
-                  f"agreeable=\"{row["agr"].astype(float)}\" "
-                  f"conscientiousness=\"{row["con"].astype(float)}\" "
-                  f"open=\"{row["ope"].astype(float)}\" />")
+                  f"extrovert=\"{row["ext"]}\" "
+                  f"neurotic=\"{row["neu"]}\" "
+                  f"agreeable=\"{row["agr"]}\" "
+                  f"conscientiousness=\"{row["con"]}\" "
+                  f"open=\"{row["ope"]}\" />")
 
     print(xml_string)
-    with open(f"{path}/{row["userid"].astype(str)}.xml", "x") as f:
+    with open(f"{path}/{row["userid"]}.xml", "x") as f:
         f.write(xml_string)

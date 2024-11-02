@@ -47,7 +47,7 @@ function parse_args() {
 #######################################
 function main() {
   parse_args "$@"
-  podman build . -t 555
+  podman build --progress=plain . -t 555
   podman run -v "$INPUTPATH":/mnt/input -v "$OUTPUTPATH":/mnt/output 555
 }
 
