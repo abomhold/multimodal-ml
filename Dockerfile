@@ -7,7 +7,7 @@ COPY ./get_cloud.py ./get_cloud.py
 COPY ./config.py ./config.py
 RUN python3 get_cloud.py
 
-FROM BUILD as run
+FROM build as run
 WORKDIR /home
 COPY . .
 ENTRYPOINT ["python3", "/home/main.py"]
