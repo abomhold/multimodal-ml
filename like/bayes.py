@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 def preprocess_likes(relation_path: Path, data: pd.DataFrame) -> pd.DataFrame:
     """
-    Preprocess likes data from relation file and merge with user data.
+    Preprocess likes data from relation file and merge with user data. a
     """
     # Ensure the path exists
     relation_file = Path(relation_path) / "relation.csv"
