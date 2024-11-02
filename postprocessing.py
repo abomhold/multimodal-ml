@@ -25,25 +25,20 @@ def write_xml(path: Path, data: pd.DataFrame):
 def row_to_xml(row, path: Path):
     row = row[1]
 
-    userid, age = (row["userid"], row["age"])
     if row["gender"] == 0:
         gender = "male"
     else:
         gender = "female"
 
-    ope, con, ext, agr, neu = (row["ope"], row["con"], row["ext"], row["agr"], row["neu"]
-
-                               )
-
-    xml_string = (f"<user id=\"{userid}\" "
-                  f"age_group=\"xx-{age}\" "
+    xml_string = (f"<user id=\"{row["userid"].astype(str)}\" "
+                  f"age_group=\"xx-{row["age"].astype(str)}\" "
                   f"gender=\"{gender}\" "
-                  f"extrovert=\"{ext}\" "
-                  f"neurotic=\"{neu}\" "
-                  f"agreeable=\"{agr}\" "
-                  f"conscientiousness=\"{con}\" "
-                  f"open=\"{ope}\" />")
+                  f"extrovert=\"{row["ext"].astype(float)}\" "
+                  f"neurotic=\"{row["neu"].astype(float)}\" "
+                  f"agreeable=\"{row["agr"].astype(float)}\" "
+                  f"conscientiousness=\"{row["con"].astype(float)}\" "
+                  f"open=\"{row["ope"].astype(float)}\" />")
 
     print(xml_string)
-    with open(f"{path}/{userid}.xml", "x") as f:
+    with open(f"{path}/{row["userid"].astype(str)}.xml", "x") as f:
         f.write(xml_string)
