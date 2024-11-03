@@ -7,12 +7,12 @@ import pandas as pd
 import config
 
 
-def download_cloud_assets():
-    if not os.path.exists("cloud_assets"):
-        os.mkdir("cloud_assets")
-    gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
-    os.system("unzip cloud_assets.zip -d cloud_assets")
-
+# def download_cloud_assets():
+#     if not os.path.exists("cloud_assets"):
+#         os.mkdir("cloud_assets")
+#     gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
+#     os.system("unzip cloud_assets.zip -d cloud_assets")
+#
 
 def profile_cvs(path: Path) -> pd.DataFrame:
     data = pd.read_csv(path).dropna()
