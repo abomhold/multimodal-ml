@@ -1,15 +1,17 @@
+import os
 from pathlib import Path
 
+import gdown
 import pandas as pd
 
 import config
 
 
-# def download_cloud_assets():
-#     if not os.path.exists("cloud_assets"):
-#         os.mkdir("cloud_assets")
-#     gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
-#     os.system("unzip cloud_assets.zip -d cloud_assets")
+def download_cloud_assets():
+    if not os.path.exists("cloud_assets"):
+        os.mkdir("cloud_assets")
+    gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
+    os.system("unzip cloud_assets.zip -d cloud_assets")
 
 
 def profile_cvs(path: Path) -> pd.DataFrame:
@@ -44,8 +46,19 @@ def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
     return data
 
 
+def remove_all_files_in_dir(dir_path):
+    for filename in os.listdir(dir_path):
+        file_path = os.path.join(dir_path, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        except Exception as e:
+            print(f"Error deleting {file_path}: {e}")
+
+
 def main():
-    # download_cloud_assets()
+    remove_all_files_in_dir(config.OUTPUT_PATH)
+    download_cloud_assets()
     data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 
