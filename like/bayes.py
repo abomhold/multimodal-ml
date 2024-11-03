@@ -7,7 +7,7 @@ import pandas as pd
 
 import config
 
-MODEL_PATH = config.PROJECT_ROOT + "/like/gender_prediction_model.pkl"
+MODEL_PATH = "like/gender_prediction_model.pkl"
 
 
 def predict_gender(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
