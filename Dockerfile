@@ -1,4 +1,4 @@
-FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel AS build-py
+FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel AS build
 LABEL authors="austin"
 WORKDIR /home
 COPY setup/requirements.txt ./requirements.txt
@@ -9,7 +9,7 @@ RUN python3 get_cloud.py \
     && unzip -d cloud_assets/ cloud_assets.zip \
     && rm cloud_assets.zip
 
-FROM build-cloud AS run
+FROM build AS run
 WORKDIR /home
 COPY . .
 ENTRYPOINT ["python3", "/home/main.py"]
