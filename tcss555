@@ -47,6 +47,8 @@ function parse_args() {
 #######################################
 function main() {
   parse_args "$@"
+  rm -rf "$OUTPUTPATH"
+  mkdir -p "$OUTPUTPATH"
   podman build . -t 555
   podman run -v "$INPUTPATH":/mnt/input -v "$OUTPUTPATH":/mnt/output 555
 }
