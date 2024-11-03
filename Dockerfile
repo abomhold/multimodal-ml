@@ -1,13 +1,19 @@
-FROM python:3.12.7-bookworm as build
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel AS build-py
 LABEL authors="austin"
 WORKDIR /home
 COPY ./requirements.txt ./requirements.txt
-RUN pip3 install -r requirements.txt
-COPY ./get_cloud.py ./get_cloud.py
-COPY ./config.py ./config.py
-RUN python3 get_cloud.py
+RUN pip3 install --root-user-action ignore -r requirements.txt
 
-FROM build as run
+FROM build-py AS build-cloud
+WORKDIR /home
+COPY ./get_cloud.py ./get_cloud.py
+RUN python3 get_cloud.py
+RUN apt update
+RUN apt install unzip
+RUN unzip cloud_assets.zip -d cloud_assets
+RUN rm cloud_assets.zip
+
+FROM build-cloud AS run
 WORKDIR /home
 COPY . .
 ENTRYPOINT ["python3", "/home/main.py"]
