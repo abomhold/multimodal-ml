@@ -19,7 +19,7 @@ def profile_cvs(path: Path) -> pd.DataFrame:
     data = data.drop(columns=["Unnamed: 0"], errors='ignore')
 
     data["userid"] = data["userid"]
-    data["age"] = data["age"].apply(lambda x: "xx00" if x == "xx--" else x)
+    data["age"] = data["age"].apply(lambda x: 0 if x == "-" else x)
     data["gender"] = data["gender"].apply(lambda x: 0 if x == "-" else x)
     data["ope"] = data["ope"].apply(lambda x: 0.0 if x == "-" else x)
     data["con"] = data["con"].apply(lambda x: 0.0 if x == "-" else x)

@@ -19,20 +19,13 @@ def write_xml(path: Path, data: pd.DataFrame):
         os.mkdir(path)
 
     for row in data.iterrows():
-        row_to_xml(row, path)
+        row_to_xml(row[1], path)
 
 
-def row_to_xml(row, path: Path):
-    row = row[1]
-
-    if row['gender'] == 0:
-        gender = 'male'
-    else:
-        gender = 'female'
-    print(row["userid"])
+def row_to_xml(row: pd.Series, path: Path):
     xml_string = (f"<user id=\"{row['userid']}\" "
                   f"age_group=\"xx-{row['age']}\" "
-                  f"gender=\"{gender}\" "
+                  f"gender=\"{'male' if row['gender'] == 0 else 'female'}\" "
                   f"extrovert=\"{row['ext']}\" "
                   f"neurotic=\"{row['neu']}\" "
                   f"agreeable=\"{row['agr']}\" "
