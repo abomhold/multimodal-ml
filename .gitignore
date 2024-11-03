@@ -167,3 +167,4 @@ cloud-assets/
 *.zip
 data/output/*
 
+/data/output/
