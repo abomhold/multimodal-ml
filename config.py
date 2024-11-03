@@ -6,6 +6,7 @@ LIKE_PATH = "/mnt/input/relation/relation.csv"
 LIWC_PATH = "/mnt/input/LIWC/LIWC.csv"
 PROFILE_PATH = "/mnt/input/profile/profile.csv"
 CLOUD_DIR = "/mnt/input/cloud_assets"
+PROJECT_ROOT = "/home"
 
 
 def get_configs():
