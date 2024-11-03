@@ -2,5 +2,4 @@ data
 ./cloud_assets.zip
 cloud_assets
 venv
-.github
 __pycache__
