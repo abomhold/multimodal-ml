@@ -14,7 +14,11 @@ def main():
     data = pre.main()
     #text_df = text.main(config.TEXT_DIR, data.copy())
     #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
-    like_df = like.bayes.predict_gender(config.LIKE_PATH, data.copy())
+    like_df = like.bayes.predict_gender(
+        relation_path=config.LIKE_PATH,
+        data=data.copy(),
+        model_path="like/gender_prediction_model.pkl"  # Make sure this path matches where you saved the model
+    )
     #combined_df = post.majority(text_df, image_df, like_df)
     # post.write_xml(config.OUTPUT_PATH, like_df)
     print(like_df)
