@@ -11,9 +11,6 @@ LIKE_DIR = INPUT_PATH.joinpath("relation")
 LIWC_PATH = INPUT_PATH.joinpath("LIWC/LIWC.csv")
 PROFILE_PATH = INPUT_PATH.joinpath("profile/profile.csv")
 
-CLOUD_ASSETS_URL = "https://drive.google.com/uc?id="
-CLOUD_ASSETS_ID = "1DQkXlgCTZc0ILO-pTBjPjkiZWZdpZaKQ"
-
 
 def get_configs():
     print(f"input path: {INPUT_PATH}")
