@@ -1,4 +1,4 @@
-FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel AS build
+FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS build
 LABEL authors="austin"
 WORKDIR /home
 COPY setup/requirements.txt ./requirements.txt
