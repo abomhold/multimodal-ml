@@ -25,20 +25,20 @@ def write_xml(path: Path, data: pd.DataFrame):
 def row_to_xml(row, path: Path):
     row = row[1]
 
-    if row["gender"] == 0:
-        gender = "male"
+    if row['gender'] == 0:
+        gender = 'male'
     else:
-        gender = "female"
-
-    xml_string = (f"<user id=\"{row["userid"]}\" "
-                  f"age_group=\"xx-{row["age"]}\" "
+        gender = 'female'
+    print(row["userid"])
+    xml_string = (f"<user id=\"{row['userid']}\" "
+                  f"age_group=\"xx-{row['age']}\" "
                   f"gender=\"{gender}\" "
-                  f"extrovert=\"{row["ext"]}\" "
-                  f"neurotic=\"{row["neu"]}\" "
-                  f"agreeable=\"{row["agr"]}\" "
-                  f"conscientiousness=\"{row["con"]}\" "
-                  f"open=\"{row["ope"]}\" />")
+                  f"extrovert=\"{row['ext']}\" "
+                  f"neurotic=\"{row['neu']}\" "
+                  f"agreeable=\"{row['agr']}\" "
+                  f"conscientiousness=\"{row['con']}\" "
+                  f"open=\"{row['ope']}\" />")
 
     print(xml_string)
-    with open(f"{path}/{row["userid"]}.xml", "x") as f:
+    with open(f"{path}/{row['userid']}.xml", "x") as f:
         f.write(xml_string)

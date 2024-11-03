@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+setup/
 develop-eggs/
 dist/
 downloads/
@@ -165,4 +165,5 @@ public-test-data/
 dataset
 cloud-assets/
 *.zip
+data/output/*
 
