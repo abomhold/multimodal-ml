@@ -1,16 +1,21 @@
-FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS build
+FROM docker.io/pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime AS build-1
 LABEL authors="austin"
 WORKDIR /home
-COPY setup/requirements.txt ./requirements.txt
+COPY ./requirements.txt ./requirements.txt
 RUN pip3 install --root-user-action ignore -r requirements.txt
+
+FROM build-1 AS build
 RUN apt update && apt install unzip
-COPY setup/get_cloud.py ./get_cloud.py
+COPY ./get_cloud.py ./get_cloud.py
 RUN python3 get_cloud.py \
     && unzip -d cloud_assets/ cloud_assets.zip \
     && rm cloud_assets.zip
 
 FROM build AS run
 WORKDIR /home
-COPY . .
+COPY ./text ./text
+COPY ./image ./image
+COPY ./like ./like
+COPY ./*.py ./
 ENTRYPOINT ["python3", "/home/main.py"]
 #ENTRYPOINT ["bash"]

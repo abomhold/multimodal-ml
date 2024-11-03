@@ -1,56 +1,8 @@
 #!/bin/bash
-set -oue pipefail
-# Globals:
-INPUTPATH="input"
-OUTPUTPATH="output"
+INPUT_PATH="./data/training/"
+OUTPUTPATH="/tmp/output"
 
-#######################################
-# description
-# Globals:
-#   INPUTPATH
-#   OUTPUTPATH
-# Arguments:
-#  None
-#######################################
-function parse_args() {
-  while [[ $# -gt 0 ]]; do
-    case $1 in
-      -i | --input)
-        INPUTPATH="$2"
-        shift # past argument
-        shift # past value
-        ;;
-      -o | --output)
-        OUTPUTPATH="$2"
-        shift # past argument
-        shift # past value
-        ;;
-      *)
-        echo "Unknown option"
-        exit 1
-        ;;
-    esac
-  done
-}
-
-#######################################
-# description
-# Globals:
-#   INPUTPATH
-#   OUTPUTPATH
-# Arguments:
-#  None
-#  rm -rf "$OUTPUTPATH"
-#  mkdir -p "$OUTPUTPATH"
-#  podman pull ghcr.io/abomhold/multimodal-ml:main
-#  podman run -v "$INPUTPATH":/mnt/input:Z -v "$OUTPUTPATH":/mnt/output:Z ghcr.io/abomhold/multimodal-ml:main
-#######################################
-function main() {
-  parse_args "$@"
-  rm -rf "$OUTPUTPATH"
-  mkdir -p "$OUTPUTPATH"
-  podman build . -t 555
-  podman run -v "$INPUTPATH":/mnt/input -v "$OUTPUTPATH":/mnt/output 555
-}
-
-main "$@"
+rm -rf "$OUTPUTPATH"
+mkdir -p "$OUTPUTPATH"
+podman build . -t 555
+podman run -v "$INPUT_PATH":/mnt/input -v "$OUTPUTPATH":/mnt/output 555

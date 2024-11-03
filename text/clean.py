@@ -5,7 +5,7 @@ from typing import Dict
 import nltk
 import pandas as pd
 from nltk import word_tokenize
-
+import charset_normalizer
 
 # Ensure necessary downloads for nltk
 nltk.download(['punkt', 'punkt_tab', 'stopwords', 'wordnet'], quiet=True)
@@ -38,11 +38,17 @@ def clean_text(text: str) -> str:
 
 def process_text_files(text_path: Path) -> Dict[str, str]:
     user_texts = {}
-    for file_path in text_path.glob('*.txt'):
+    for file_path in Path(text_path).glob('*.txt'):
         user_id = file_path.stem
-        with file_path.open('r', encoding='utf-8', errors='ignore') as text_file:
-            content = text_file.read()
-            user_texts[user_id] = clean_text(content)
+        user_texts[user_id] = ''
+        result = charset_normalizer.from_path(file_path)
+        if result.best() is not None:
+            with file_path.open('r', encoding=result.best().encoding) as text_file:
+                content = text_file.read()
+                user_texts[user_id] = clean_text(content)
+        else:
+            print(f"Could not determine encoding for {file_path}")
+
     return user_texts
 
 

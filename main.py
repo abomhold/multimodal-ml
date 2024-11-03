@@ -1,6 +1,5 @@
-import torch
-
 import config
+import torch
 import like.bayes
 import text.main as text
 import postprocessing as post
@@ -13,8 +12,6 @@ model_name = 'resnet50'
 def main():
     print("Starting...")
     data = pre.main()
-    config.get_configs()
-    print(data)
     text_df = text.main(config.TEXT_DIR, data.copy())
     #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
     #like_df = like.bayes.predict_gender(config.LIKE_DIR, data.copy())
