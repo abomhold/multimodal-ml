@@ -20,8 +20,8 @@ def predict_gender(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         DataFrame with predictions
     """
-    print("\nProcessing likes data...")
     global MODEL_PATH
+    print("\nProcessing likes data...")
     result_df = data.copy()
 
     try:
