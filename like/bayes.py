@@ -105,7 +105,7 @@ def predict_gender(relation_dir: Path, data: pd.DataFrame) -> pd.DataFrame:
 
     # Make predictions on test set
     test_predictions = predict(test_df, vectorizer, model)
-    print(test_predictions)
+    print(f"TEST PREDICTION{test_predictions}")
     # Calculate and print accuracy
     accuracy = accuracy_score(test_df['gender'], test_predictions)
     print(f"Like-based gender prediction accuracy: {accuracy:.2f}")
