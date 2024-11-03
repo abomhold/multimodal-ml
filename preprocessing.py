@@ -1,31 +1,22 @@
-import os
 from pathlib import Path
 
-import gdown
 import pandas as pd
 
 import config
 
-
-# def download_cloud_assets():
-#     if not os.path.exists("cloud_assets"):
-#         os.mkdir("cloud_assets")
-#     gdown.download(config.CLOUD_ASSETS_URL + config.CLOUD_ASSETS_ID, output="cloud_assets.zip", quiet=False, fuzzy=True)
-#     os.system("unzip cloud_assets.zip -d cloud_assets")
-#
 
 def profile_cvs(path: Path) -> pd.DataFrame:
     data = pd.read_csv(path).dropna()
     data = data.drop(columns=["Unnamed: 0"], errors='ignore')
 
     data["userid"] = data["userid"]
-    data["age"] = data["age"].apply(lambda x: 0 if x == "-" else x)
-    data["gender"] = data["gender"].apply(lambda x: 0 if x == "-" else x)
-    data["ope"] = data["ope"].apply(lambda x: 0.0 if x == "-" else x)
-    data["con"] = data["con"].apply(lambda x: 0.0 if x == "-" else x)
-    data["ext"] = data["ext"].apply(lambda x: 0.0 if x == "-" else x)
-    data["agr"] = data["agr"].apply(lambda x: 0.0 if x == "-" else x)
-    data["neu"] = data["neu"].apply(lambda x: 0.0 if x == "-" else x)
+    data["age"] = data["age"].apply(lambda x: 20 if x == "-" else x)
+    data["gender"] = data["gender"].apply(lambda x: 1 if x == "-" else x)
+    data["ope"] = data["ope"].apply(lambda x: 3.9 if x == "-" else x)
+    data["con"] = data["con"].apply(lambda x: 3.4 if x == "-" else x)
+    data["ext"] = data["ext"].apply(lambda x: 3.4 if x == "-" else x)
+    data["agr"] = data["agr"].apply(lambda x: 3.5 if x == "-" else x)
+    data["neu"] = data["neu"].apply(lambda x: 2.7 if x == "-" else x)
     return data
 
 
@@ -46,19 +37,7 @@ def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
     return data
 
 
-def remove_all_files_in_dir(dir_path):
-    for filename in os.listdir(dir_path):
-        file_path = os.path.join(dir_path, filename)
-        try:
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-        except Exception as e:
-            print(f"Error deleting {file_path}: {e}")
-
-
 def main():
-    remove_all_files_in_dir(config.OUTPUT_PATH)
-    #download_cloud_assets()
     data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 

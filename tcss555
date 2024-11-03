@@ -1,5 +1,5 @@
 #!/bin/bash
-INPUT_PATH="./data/training/"
+INPUT_PATH="./data/public-test-data/"
 OUTPUTPATH="/tmp/output"
 
 rm -rf "$OUTPUTPATH"
