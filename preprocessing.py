@@ -58,7 +58,7 @@ def remove_all_files_in_dir(dir_path):
 
 def main():
     remove_all_files_in_dir(config.OUTPUT_PATH)
-    download_cloud_assets()
+    #download_cloud_assets()
     data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 

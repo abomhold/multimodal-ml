@@ -1,6 +1,6 @@
 import sys
 import subprocess
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+#subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 ############################################################################################################
 # DON'T CHANGE ANYTHING ABOVE THIS
 ############################################################################################################
