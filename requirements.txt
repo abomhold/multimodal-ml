@@ -1,11 +1,11 @@
-pandas~=2.2.3
-bottleneck == 1.4.0
-pathlib~=1.0.1
-torch~=2.5.1
-torchvision~=0.20.0
-pillow~=11.0.0
-nltk~=3.9.1
-numpy~=2.1.2
-scikit-learn~=1.5.2
-joblib~=1.4.2
-gdown~=5.2.0
+pandas
+bottleneck
+pathlib
+nltk
+numpy
+scikit-learn
+joblib
+gdown
+torch
+torchvision
+pillow
