@@ -1,9 +1,9 @@
 #!/bin/bash
 INPUT_PATH="./data/public-test-data/"
-OUTPUTPATH="./data/output"
+OUTPUTPATH="/tmp/output"
 
 rm -rf "$OUTPUTPATH"
 mkdir -p "$OUTPUTPATH"
 podman system prune -f
 podman build . -t 555
-podman run -v "$INPUT_PATH":/tmp/input -v "$OUTPUTPATH":/tmp/output 555
+podman run -v "$INPUT_PATH":/mnt/input -v "$OUTPUTPATH":/mnt/output 555
