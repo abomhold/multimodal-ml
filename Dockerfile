@@ -19,4 +19,3 @@ COPY ./image ./image
 COPY ./like ./like
 COPY ./*.py ./
 ENTRYPOINT ["python3", "/home/main.py"]
-#ENTRYPOINT ["bash"]
