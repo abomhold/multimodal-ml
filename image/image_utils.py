@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PIL import Image
 import pandas as pd
 import torch
@@ -15,7 +17,7 @@ transforms = v2.Compose([
 
 def get_image(image_dir):
     images = {}
-    for image_file in image_dir.iterdir():
+    for image_file in Path(image_dir).iterdir():
         try:
             original_image = Image.open(image_file)
             image_copy = original_image.copy()

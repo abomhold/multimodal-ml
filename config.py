@@ -5,7 +5,7 @@ IMAGE_DIR = "/tmp/input/image"
 LIKE_PATH = "/tmp/input/relation/relation.csv"
 LIWC_PATH = "/tmp/input/LIWC/LIWC.csv"
 PROFILE_PATH = "/tmp/input/profile/profile.csv"
-CLOUD_DIR = "/tmp/input/cloud_assets"
+# CLOUD_DIR = "/tmp/input/cloud_assets"
 PROJECT_ROOT = "/home"
 
 
@@ -17,7 +17,7 @@ def get_configs():
     print(f"like dir: {LIKE_PATH}")
     print(f"LIWC path: {LIWC_PATH}")
     print(f"profile path: {PROFILE_PATH}\n")
-    print(f"cloud assets: {CLOUD_DIR}")
+    # print(f"cloud assets: {CLOUD_DIR}")
 
 
 if __name__ == '__main__':

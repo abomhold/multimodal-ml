@@ -9,7 +9,7 @@ WORKDIR /home
 RUN apt update && apt install unzip
 COPY ./get_cloud.py ./get_cloud.py
 RUN python3 get_cloud.py \
-    && unzip -d cloud_assets/ cloud_assets.zip \
+    && unzip cloud_assets.zip \
     && rm cloud_assets.zip
 
 FROM build AS run

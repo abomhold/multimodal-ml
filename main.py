@@ -17,6 +17,7 @@ def main():
 
     #like_df = like.bayes.predict_gender(relation_path=config.LIKE_PATH, data=data.copy())
     # combined_df = post.majority(text_df, image_df, like_df)
+    print(image_df)
     post.write_xml(config.OUTPUT_PATH, image_df)
     print("Done!")
 
