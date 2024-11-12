@@ -21,7 +21,7 @@ print(df)
 
 df = clean.main(Path("../data/training/text"), df)
 print(df)
-
+df.to_csv("cleaned.csv")
 
 
 
