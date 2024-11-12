@@ -35,14 +35,16 @@ def clean_text(text: str) -> str:
     return ' '.join(words).lower()
 
 
-def process_text_files(text_path: str) -> Dict[str, str]:
+def process_text_files(text_path: Path) -> (Dict[str, str], Dict[str, str]):
     user_texts = {}
-    for file_path in Path(text_path).glob('*.txt'):
+    user_words = {}
+    for file_path in text_path.glob('*.txt'):
         user_id = file_path.stem
         with file_path.open('r', encoding='utf-8', errors='ignore') as text_file:
             content = text_file.read()
-            user_texts[user_id] = clean_text(content)
-    return user_texts
+            user_words[user_id] = clean_text(content)
+            user_texts[user_id] = content
+    return user_texts, user_words
 
 
 # def process_text_files(text_path: Path) -> Dict[str, str]:
@@ -62,11 +64,13 @@ def process_text_files(text_path: str) -> Dict[str, str]:
 
 
 def main(path: Path, data: pd.DataFrame):
-    user_texts = process_text_files(path)
+    user_texts, user_words = process_text_files(path)
     text_df = pd.DataFrame.from_dict(user_texts, orient='index', columns=['text'])
-    # print(text_df)
     text_df.index.name = 'userid'
+    word_df = pd.DataFrame.from_dict(user_words, orient='index', columns=['words'])
+    word_df.index.name = 'userid'
+    text_df = text_df.join(word_df, how='inner', on='userid')
     data.set_index('userid', inplace=True)
-    combined_df = data.join(text_df, how='inner').reset_index()
-    combined_df = combined_df.dropna()
+    combined_df = data.join(text_df, how='inner', on='userid')
+    combined_df.reset_index(inplace=True)
     return combined_df
