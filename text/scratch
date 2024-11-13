@@ -1,0 +1,56 @@
+# Create vocab for text and encode the words to integers
+all_text = data['text'].astype(str)
+text_tokenizer = tf.keras.preprocessing.text.Tokenizer()
+
+text_tokenizer.fit_on_texts(all_text)
+print(text_tokenizer.word_index)
+
+encoded = text_tokenizer.texts_to_sequences(all_text)
+print(encoded)
+
+sequences = []
+labels = []
+# Note: We are implementing one-word in and one-word out LM
+for i in range(1, len(encoded)):
+    sequences.append(encoded[i - 1])  # input: word 1
+    labels.append(encoded[i])  # output: word 2
+print('Total Sequences: %d' % len(sequences))
+print(sequences)
+print(labels)
+
+
+
+
+# Create vocab for text and encode the words to integers
+all_words = data['words'].astype(str)
+word_tokenizer = tf.keras.preprocessing.text.Tokenizer()
+
+word_tokenizer.fit_on_texts(all_words)
+print(word_tokenizer.word_index)
+
+encoded = word_tokenizer.texts_to_sequences(all_words)
+print(encoded)
+
+sequences = []
+labels = []
+# Note: We are implementing one-word in and one-word out LM
+for i in range(1, len(encoded)):
+    sequences.append(encoded[i - 1])  # input: word 1
+    labels.append(encoded[i])  # output: word 2
+print('Total Sequences: %d' % len(sequences))
+print(sequences)
+print(labels)tokenizer = tf.keras.preprocessing.text.Tokenizer()
+raw_text = ' '.join(data['text'])
+tokenizer.fit_on_texts(raw_text)
+print(tokenizer.word_index)
+encoded = tokenizer.texts_to_sequences([raw_text])[0]
+print(encoded)
+sequences = []
+labels = []
+# Note: We are implementing one-word in and one-word out LM
+for i in range(1, len(encoded)):
+    sequences.append(encoded[i - 1])  # input: word 1
+    labels.append(encoded[i])  # output: word 2
+print('Total Sequences: %d' % len(sequences))
+print(sequences)
+print(labels)

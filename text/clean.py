@@ -9,7 +9,7 @@ from nltk import word_tokenize
 
 import text.emojis as emojis_py
 
-emojis: Dict[str, str] = emojis_py.EMOTICONS
+emojis: Dict[list[str], str] = emojis_py.emoticons
 
 # Ensure necessary downloads for nltk
 nltk.download(['punkt', 'punkt_tab', 'stopwords', 'wordnet'], quiet=True)
@@ -21,10 +21,9 @@ stop_words = set(stopwords.words('english'))
 
 
 def clean_text(text: str) -> str:
-    # text = unicodedata.normalize('NFD', text)
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
-    text =
-    text = re.sub('|'.join(map(re.escape, key)), f" {emojis[key]} emoji", text)
+    for key in emojis:
+        text = re.sub('|'.join(map(re.escape, key)), f" {emojis[key]} emoji", text)
 
     text = re.sub(r'[^a-zA-Z\s]', ' ', text, flags=re.MULTILINE)
     text = re.sub(r'(\w)(\1{2,})', lambda m: m.group(1) + m.group(1), text, flags=re.MULTILINE)
@@ -60,7 +59,6 @@ def process_text_files(text_path: Path) -> (Dict[str, str], Dict[str, str]):
 def main(path: Path, data: pd.DataFrame):
     # Read text files into a dictionary
     user_texts, user_words = process_text_files(path)
-    print(user_words)
     # Transform the dictionary into a DataFrame
     # For original text:
     text_df = pd.DataFrame.from_dict(user_texts, orient='index', columns=['text'])

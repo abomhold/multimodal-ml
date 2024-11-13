@@ -9,3 +9,5 @@ gdown
 torch
 torchvision
 pillow
+tensorflow
+pydot
