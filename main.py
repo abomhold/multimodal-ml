@@ -1,7 +1,7 @@
 import torch
 import image.image_testrun as image_testrun
 import config
-import like.bayes
+import like.predict
 import preprocessing as pre
 import postprocessing as post
 
@@ -13,12 +13,11 @@ def main():
     print("Starting...")
     data = pre.main()
     # text_df = text.main(config.TEXT_DIR, data.copy())
-    image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
+    # image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
 
-    #like_df = like.bayes.predict_gender(relation_path=config.LIKE_PATH, data=data.copy())
+    like_df = like.predict.predict_all(relation_path=config.LIKE_PATH, data=data.copy())
     # combined_df = post.majority(text_df, image_df, like_df)
-    print(image_df)
-    post.write_xml(config.OUTPUT_PATH, image_df)
+    post.write_xml(config.OUTPUT_PATH, like_df)
     print("Done!")
 
 
