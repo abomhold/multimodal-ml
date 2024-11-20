@@ -39,7 +39,7 @@ def process_text_files(text_path: Path) -> (Dict[str, str], Dict[str, str]):
     for file_path in Path(text_path).glob('*.txt'):
         user_id = file_path.stem
         user_texts[user_id] = ''
-        result = charset_normalizer.from_path(file_path)
+            result = .from_path(file_path)
 
         if result.first() is not None:
             encoding = result.first().encoding
