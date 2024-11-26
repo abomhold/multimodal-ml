@@ -43,9 +43,6 @@ def predict_all(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
                 .agg(lambda x: ' '.join(map(str, x)))
                 .reset_index())
         
-        # Count number of likes per user
-        likes['like_count'] = likes['like_id'].str.count(' ') + 1
-
         # Merge with input data
         merged_data = pd.merge(data, likes, on='userid', how='left')
         valid_data = merged_data.dropna(subset=['like_id'])
@@ -63,30 +60,15 @@ def predict_all(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
                 predictions = predictor.models[trait].predict(X_new)
                 
                 if trait == 'age':
-                    # Round age predictions
-                    predictions = np.round(predictions).astype(int)
-                    
-                    # Set minimum and maximum reasonable age limits
-                    MIN_AGE = 13
-                    MAX_AGE = 90
-                    
-                    # Clip age predictions to reasonable range
-                    predictions = np.clip(predictions, MIN_AGE, MAX_AGE)
-                    
-                    # Add age ranges
+                    predictions = np.clip(np.round(predictions).astype(int), 13, 90)
                     age_ranges = [f"{age-5}-{age+5}" for age in predictions]
                     result_df.loc[valid_data.index, 'age_range'] = age_ranges
-                    
                 else:
-                    # For personality traits (ope, con, ext, agr, neu)
-                    # Clip between 1 and 5, as these are the valid ranges for Big Five traits
                     predictions = np.clip(np.round(predictions, 2), 1, 5)
-                    
-                    # Print debugging information for personality predictions
-                    print(f"\n{trait.upper()} prediction statistics:")
-                    print(pd.Series(predictions).describe())
                 
                 result_df.loc[valid_data.index, trait] = predictions
+                print(f"\n{trait.upper()} prediction statistics:")
+                print(pd.Series(predictions).describe())
 
         # Make predictions for classification traits (gender)
         for trait in predictor.classification_traits:
@@ -94,7 +76,6 @@ def predict_all(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
                 predictions = predictor.models[trait].predict(X_new)
                 probabilities = predictor.models[trait].predict_proba(X_new)
                 
-                # Transform predictions back to original labels
                 predictions = predictor.label_encoder.inverse_transform(predictions)
                 
                 result_df.loc[valid_data.index, trait] = predictions
