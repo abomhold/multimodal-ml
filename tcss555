@@ -2,10 +2,9 @@
 INPUTPATH="/home/austin/UW/multimodal-ml/data/training"
 OUTPUTPATH="/home/austin/UW/multimodal-ml/data/output"
 
-rm -rf "$OUTPUTPATH"
+rm "$OUTPUTPATH"/*
 mkdir -p "$OUTPUTPATH"
 podman system prune -f
 
 podman build . -t 555
-
-podman run -v "$INPUTPATH":/tmp/input:Z -v "$OUTPUTPATH":/tmp/output:Z 555
+podman run -v "$INPUTPATH":/tmp/input -v "$OUTPUTPATH":/tmp/output 555
