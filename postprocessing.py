@@ -23,8 +23,9 @@ def write_xml(path: Path, data: pd.DataFrame):
 
 
 def row_to_xml(row: pd.Series, path: Path):
+    age_value = int(row['age'])
     xml_string = (f"<user id=\"{row['userid']}\" "
-                  f"age_group=\"xx-{row['age']}\" "
+                  f"age_group=\"xx-{age_value}\" "
                   f"gender=\"{'male' if row['gender'] == 0 else 'female'}\" "
                   f"extrovert=\"{row['ext']}\" "
                   f"neurotic=\"{row['neu']}\" "
