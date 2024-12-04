@@ -1,12 +1,12 @@
 FROM docker.io/pytorch/pytorch:latest AS build-1
 LABEL authors="austin"
-WORKDIR /home
+WORKDIR /tmp
 COPY ./requirements.txt ./requirements.txt
 RUN pip3 install --root-user-action ignore -r requirements.txt
 
 FROM build-1 AS build
 WORKDIR /home
-RUN apt update && apt install unzip selinux-utils
+RUN apt update && apt install unzip
 COPY ./get_cloud.py ./get_cloud.py
 RUN python3 get_cloud.py \
     && unzip cloud_assets.zip \
