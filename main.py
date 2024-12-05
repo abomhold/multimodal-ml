@@ -22,14 +22,16 @@ def parse_args():
 
     args = parser.parse_args()
 
-    config.INPUT_PATH = Path(args.input_path)
-    config.OUTPUT_PATH = Path(args.output_path)
+    config.INPUT_PATH = args.input_path
+    config.OUTPUT_PATH = args.output_path
 
 def main():
     print("Starting...")
 
     
     parse_args()
+    config.set_configs()
+    config.get_configs()
 
     data = pre.main()
     # text_df = text.main(config.TEXT_DIR, data.copy())

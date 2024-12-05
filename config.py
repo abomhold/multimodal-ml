@@ -1,11 +1,10 @@
-c:
-OUTPUT_PATH: str 
-INPUT_PATH: str
-TEXT_DIR = f"{INPUT_PATH}/text"
-IMAGE_DIR = f"{INPUT_PATH}/image"
-LIKE_PATH = f"{INPUT_PATH}/relation/relation.csv"
-LIWC_PATH = f"{INPUT_PATH}/LIWC/LIWC.csv"
-PROFILE_PATH = f"{INPUT_PATH}/profile/profile.csv"
+OUTPUT_PATH: str = "output"
+INPUT_PATH: str = "input"
+TEXT_DIR: str = ""
+IMAGE_DIR: str = ""
+LIKE_PATH: str = ""
+LIWC_PATH: str = ""
+PROFILE_PATH: str = ""
 
 
 def get_configs():
@@ -18,5 +17,16 @@ def get_configs():
     print(f"profile path: {PROFILE_PATH}\n")
 
 
+
+
+def set_configs():
+    global TEXT_DIR, IMAGE_DIR, LIKE_PATH, LIWC_PATH, PROFILE_PATH
+    TEXT_DIR = INPUT_PATH + "text"
+    IMAGE_DIR = INPUT_PATH + "image"
+    LIKE_PATH = INPUT_PATH + "like"
+    LIWC_PATH = INPUT_PATH + "liwc"
+    PROFILE_PATH = INPUT_PATH + "profile"
+
 if __name__ == '__main__':
     get_configs()
+
