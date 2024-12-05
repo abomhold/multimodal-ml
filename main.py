@@ -9,6 +9,7 @@ import text.main as text
 import os
 from pathlib import Path
 import argparse
+import get_cloud
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = 'resnet50'
 
@@ -32,6 +33,8 @@ def main():
     parse_args()
     config.set_configs()
     config.get_configs()
+
+    get_cloud()    
 
     data = pre.main()
     # text_df = text.main(config.TEXT_DIR, data.copy())

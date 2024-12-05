@@ -10,13 +10,24 @@
 #   universal: false
 
 -e file:.
+beautifulsoup4==4.12.3
+    # via gdown
+certifi==2024.8.30
+    # via requests
+charset-normalizer==3.4.0
+    # via requests
 click==8.1.7
     # via nltk
 filelock==3.16.1
+    # via gdown
     # via torch
     # via triton
 fsspec==2024.10.0
     # via torch
+gdown==5.2.0
+    # via multimodal-ml
+idna==3.10
+    # via requests
 jinja2==3.1.4
     # via torch
 joblib==1.4.2
@@ -70,12 +81,16 @@ pandas==2.2.3
 pillow==11.0.0
     # via multimodal-ml
     # via torchvision
+pysocks==1.7.1
+    # via requests
 python-dateutil==2.9.0.post0
     # via pandas
 pytz==2024.2
     # via pandas
 regex==2024.11.6
     # via nltk
+requests==2.32.3
+    # via gdown
 scikit-learn==1.5.2
     # via multimodal-ml
 scipy==1.14.1
@@ -84,6 +99,8 @@ setuptools==75.6.0
     # via torch
 six==1.17.0
     # via python-dateutil
+soupsieve==2.6
+    # via beautifulsoup4
 sympy==1.13.1
     # via torch
 threadpoolctl==3.5.0
@@ -94,6 +111,7 @@ torch==2.5.1
 torchvision==0.20.1
     # via multimodal-ml
 tqdm==4.67.1
+    # via gdown
     # via nltk
 triton==3.1.0
     # via torch
@@ -101,3 +119,5 @@ typing-extensions==4.12.2
     # via torch
 tzdata==2024.2
     # via pandas
+urllib3==2.2.3
+    # via requests
