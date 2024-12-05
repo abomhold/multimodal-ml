@@ -34,5 +34,5 @@ def row_to_xml(row: pd.Series, path: Path):
                   f"open=\"{row['ope']}\" />")
 
     print(xml_string)
-    with open(f"{path}/{row['userid']}.xml", "x") as f:
+    with open(f"{path}{row['userid']}.xml", "x") as f:
         f.write(xml_string)
