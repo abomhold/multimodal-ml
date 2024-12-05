@@ -269,7 +269,7 @@ class UserTraitsPredictor:
 if __name__ == "__main__":
     predictor = UserTraitsPredictor()
     predictor.train_and_save_model(
-        relation_path="../training/relation/relation.csv",
-        profile_path="../training/profile/profile.csv",
+        relation_path="data/training/relation/relation.csv",
+        profile_path="data/training/profile/profile.csv",
         model_save_path="user_traits_prediction_models.pkl"
     )
