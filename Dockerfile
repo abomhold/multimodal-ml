@@ -16,9 +16,4 @@ COPY ./text ./text
 COPY ./image ./image
 COPY ./like ./like
 COPY ./*.py ./
-
-<<<<<<< HEAD
 CMD ["python3", "main.py"]
-=======
-ENTRYPOINT ["python3", "/tmp/main.py"]
->>>>>>> 19e90cb38c6db2f5877be362dd093c4925fce2f5
