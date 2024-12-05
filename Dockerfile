@@ -16,4 +16,5 @@ COPY ./text ./text
 COPY ./image ./image
 COPY ./like ./like
 COPY ./*.py ./
-CMD ["python3", "main.py"]
+CMD ["python3", "print('this is a new image')"]
+
