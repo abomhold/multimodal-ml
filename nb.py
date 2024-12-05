@@ -8,7 +8,6 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import MinMaxScaler
 import keras
 from tensorflow.keras import layers, Model, callbacks, optimizers
-from tensorflow.python.ops.metrics_impl import precision
 from transformers import AutoTokenizer
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

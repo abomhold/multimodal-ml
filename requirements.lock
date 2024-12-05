@@ -26,11 +26,14 @@ click==8.1.7
     # via nltk
 filelock==3.16.1
     # via gdown
+    # via huggingface-hub
     # via torch
+    # via transformers
     # via triton
 flatbuffers==24.3.25
     # via tensorflow
 fsspec==2024.10.0
+    # via huggingface-hub
     # via torch
 gast==0.6.0
     # via tensorflow
@@ -44,6 +47,9 @@ grpcio==1.68.1
 h5py==3.12.1
     # via keras
     # via tensorflow
+huggingface-hub==0.26.3
+    # via tokenizers
+    # via transformers
 idna==3.10
     # via requests
 jinja2==3.1.4
@@ -86,6 +92,7 @@ numpy==2.0.2
     # via tensorboard
     # via tensorflow
     # via torchvision
+    # via transformers
 nvidia-cublas-cu12==12.4.5.8
     # via nvidia-cudnn-cu12
     # via nvidia-cusolver-cu12
@@ -120,9 +127,11 @@ opt-einsum==3.4.0
 optree==0.13.1
     # via keras
 packaging==24.2
+    # via huggingface-hub
     # via keras
     # via tensorboard
     # via tensorflow
+    # via transformers
 pandas==2.2.3
     # via multimodal-ml
 pillow==11.0.0
@@ -139,13 +148,21 @@ python-dateutil==2.9.0.post0
     # via pandas
 pytz==2024.2
     # via pandas
+pyyaml==6.0.2
+    # via huggingface-hub
+    # via transformers
 regex==2024.11.6
     # via nltk
+    # via transformers
 requests==2.32.3
     # via gdown
+    # via huggingface-hub
     # via tensorflow
+    # via transformers
 rich==13.9.4
     # via keras
+safetensors==0.4.5
+    # via transformers
 scikit-learn==1.5.2
     # via multimodal-ml
 scipy==1.14.1
@@ -174,6 +191,8 @@ termcolor==2.5.0
     # via tensorflow
 threadpoolctl==3.5.0
     # via scikit-learn
+tokenizers==0.21.0
+    # via transformers
 torch==2.5.1
     # via multimodal-ml
     # via torchvision
@@ -181,10 +200,15 @@ torchvision==0.20.1
     # via multimodal-ml
 tqdm==4.67.1
     # via gdown
+    # via huggingface-hub
     # via nltk
+    # via transformers
+transformers==4.47.0
+    # via multimodal-ml
 triton==3.1.0
     # via torch
 typing-extensions==4.12.2
+    # via huggingface-hub
     # via optree
     # via tensorflow
     # via torch
