@@ -24,11 +24,11 @@ class UserTraitsPredictor:
         
         self.model_candidates = {
             'ridge': Ridge(random_state=42),
-            'lasso': Lasso(random_state=42),
+            'lasso': Lasso(random_state=42),    
             'elastic': ElasticNet(random_state=42)
         }
         
-        self.regression_traits = ['age', 'ope', 'con', 'ext', 'agr', 'neu']
+        self.regression_traits = ['age', 'ope', 'neu', 'ext', 'agr', 'con']
         self.classification_traits = ['gender']
     
     def remove_outliers(self, data: pd.DataFrame, column: str) -> pd.DataFrame:
