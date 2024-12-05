@@ -194,8 +194,8 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
 
 def main():
     # File paths
-    CLEANED_DATA_PATH = 'text/cleaned.csv'
-    LIWC_PROFILE_PATH = './data/training/LIWC/LIWC.csv'
+    CLEANED_DATA_PATH = "./cleaned.csv"
+    LIWC_PROFILE_PATH = "./data/training/LIWC/LIWC.csv"
 
     # Load and preprocess data
     tokens, scaled_ling, y_scaled, scaling_factors = load_and_preprocess(CLEANED_DATA_PATH, LIWC_PROFILE_PATH)

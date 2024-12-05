@@ -14,7 +14,7 @@ import pickle
 #from google.colab import drive
 #drive.mount('/content/drive', contentforce_remount=False)
 # Load Data
-data = pd.read_csv('text/cleaned.csv')
+data = pd.read_csv('cleaned.csv')
 # print(raw_data.head())
 # VARS
 # input_col = raw_data['words']

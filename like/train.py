@@ -106,7 +106,7 @@ class UserTraitsPredictor:
                         cv=KFold(n_splits=5, shuffle=True, random_state=42),
                         scoring='neg_root_mean_squared_error'
                     )
-                    
+
                     mean_rmse = -cv_scores.mean()
                     std_rmse = cv_scores.std()
                     
@@ -154,8 +154,8 @@ class UserTraitsPredictor:
         
 if __name__ == "__main__":
     predictor = UserTraitsPredictor()
-    predictor.train_and_save_model(
-        relation_path="data/training/relation/relation.csv",
-        profile_path="data/training/profile/profile.csv",
-        model_save_path="user_traits_prediction_models.pkl"
-    )
+#    predictor.train_and_save_model(
+#        relation_path="data/training/relation/relation.csv",
+#        profile_path="data/training/profile/profile.csv",
+#        model_save_path="user_traits_prediction_models.pkl"
+#    )
