@@ -3,6 +3,7 @@ name = "multimodal-ml"
 version = "0.1.0"
 description = "Add your description here"
 dependencies = [
+    "scikit-learn>=1.5.2",
     "torch>=2.5.1",
     "pillow>=11.0.0",
     "torchvision>=0.20.1",

@@ -1,11 +1,11 @@
-PROJECT_ROOT = "."
-OUTPUT_PATH = "${PROJECT_ROOT}/output"
-INPUT_PATH = "${PROJECT_ROOT}/input"
-TEXT_DIR = "${INPUT_PATH}/text"
-IMAGE_DIR = "${INPUT_PATH}/image"
-LIKE_PATH = "${INPUT_PATH}/relation/relation.csv"
-LIWC_PATH = "${INPUT_PATH}/LIWC/LIWC.csv"
-PROFILE_PATH = "${INPUT_PATH}/profile/profile.csv"
+c:
+OUTPUT_PATH: str 
+INPUT_PATH: str
+TEXT_DIR = f"{INPUT_PATH}/text"
+IMAGE_DIR = f"{INPUT_PATH}/image"
+LIKE_PATH = f"{INPUT_PATH}/relation/relation.csv"
+LIWC_PATH = f"{INPUT_PATH}/LIWC/LIWC.csv"
+PROFILE_PATH = f"{INPUT_PATH}/profile/profile.csv"
 
 
 def get_configs():

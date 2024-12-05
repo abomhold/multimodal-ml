@@ -1,4 +1,6 @@
-# Byte-compiled / optimized / DLL files
+#LPO Byte-compiled / optimized / DLL files
+input/
+output/
 __pycache__/
 *.py[cod]
 *$py.class

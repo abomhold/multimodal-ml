@@ -1,3 +1,4 @@
+import sys
 import torch
 import image.image_testrun as image_testrun
 import config
@@ -6,13 +7,29 @@ import preprocessing as pre
 import postprocessing as post
 import text.main as text
 import os
-
+from pathlib import Path
+import argparse
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model_name = 'resnet50'
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Process input and output paths')
+    parser.add_argument('-i', '--input', dest='input_path', default='input',
+                       help='Input path (default: input)')
+    parser.add_argument('-o', '--output', dest='output_path', default='output',
+                       help='Output path (default: output)')
+
+    args = parser.parse_args()
+
+    config.INPUT_PATH = Path(args.input_path)
+    config.OUTPUT_PATH = Path(args.output_path)
+
 def main():
     print("Starting...")
+
+    
+    parse_args()
 
     data = pre.main()
     # text_df = text.main(config.TEXT_DIR, data.copy())
