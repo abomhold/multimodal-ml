@@ -1,12 +1,11 @@
-INPUT_PATH = "/tmp/input"
-OUTPUT_PATH = "/tmp/output"
-TEXT_DIR = "/tmp/input/text"
-IMAGE_DIR = "/tmp/input/image"
-LIKE_PATH = "/tmp/input/relation/relation.csv"
-LIWC_PATH = "/tmp/input/LIWC/LIWC.csv"
-PROFILE_PATH = "/tmp/input/profile/profile.csv"
-# CLOUD_DIR = "/tmp/input/cloud_assets"
-PROJECT_ROOT = "/home"
+PROJECT_ROOT = "."
+OUTPUT_PATH = "${PROJECT_ROOT}/output"
+INPUT_PATH = "${PROJECT_ROOT}/input"
+TEXT_DIR = "${INPUT_PATH}/text"
+IMAGE_DIR = "${INPUT_PATH}/image"
+LIKE_PATH = "${INPUT_PATH}/relation/relation.csv"
+LIWC_PATH = "${INPUT_PATH}/LIWC/LIWC.csv"
+PROFILE_PATH = "${INPUT_PATH}/profile/profile.csv"
 
 
 def get_configs():
@@ -17,7 +16,6 @@ def get_configs():
     print(f"like dir: {LIKE_PATH}")
     print(f"LIWC path: {LIWC_PATH}")
     print(f"profile path: {PROFILE_PATH}\n")
-    # print(f"cloud assets: {CLOUD_DIR}")
 
 
 if __name__ == '__main__':
