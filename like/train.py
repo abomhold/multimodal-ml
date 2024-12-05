@@ -2,6 +2,7 @@ import pickle
 from pathlib import Path
 import numpy as np
 import pandas as pd
+from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_squared_error, r2_score
@@ -109,12 +110,42 @@ class UserTraitsPredictor:
         """Convert age to standardized age group format."""
         lower = age - (age % 5)  # Round down to nearest 5
         return f"{lower}-{lower+5}"
-    
+    def get_age_group(self, age):
+        """Convert numerical age to standardized age group format."""
+        age = float(age)
+        if age <= 24:
+            return 'xx-24'
+        elif age <= 34:
+            return '25-34'
+        elif age <= 49:
+            return '35-49'
+        else:
+            return '50-xx'
+        
     def calculate_age_accuracy(self, y_true, y_pred):
         """Calculate accuracy of age group predictions."""
         true_groups = np.array([self.get_age_group(age) for age in y_true])
         pred_groups = np.array([self.get_age_group(age) for age in y_pred])
-        return (true_groups == pred_groups).mean()
+        
+        # Calculate overall accuracy
+        accuracy = accuracy_score(true_groups, pred_groups)
+        
+        # Calculate per-group metrics
+        group_metrics = {}
+        for group in ['xx-24', '25-34', '35-49', '50-xx']:
+            group_mask = (true_groups == group)
+            if group_mask.sum() > 0:
+                group_accuracy = accuracy_score(
+                    true_groups[group_mask], 
+                    pred_groups[group_mask]
+                )
+                group_support = group_mask.sum()
+                group_metrics[group] = {
+                    'accuracy': group_accuracy,
+                    'support': group_support
+                }
+        
+        return accuracy, group_metrics
 
 
     def train_and_save_model(self, relation_path: str, profile_path: str, model_save_path: str):
@@ -150,39 +181,49 @@ class UserTraitsPredictor:
                 y_test = y[test_idx]
                 
                 if trait == 'age':
-                    # Special handling for age using Random Forest
-                    predictions = []
-                    true_values = []
+                    # Cross-validation for age groups
+                    cv_predictions = []
+                    cv_true_values = []
                     kf = KFold(n_splits=5, shuffle=True, random_state=42)
                     
-                    # Cross-validation on training data only
                     for fold_train_idx, val_idx in kf.split(X_train):
-                        # Train Random Forest on fold
                         self.age_model.fit(
                             X_train[fold_train_idx], 
                             y_train[fold_train_idx]
                         )
-                        # Predict and store results
                         fold_preds = self.age_model.predict(X_train[val_idx])
-                        predictions.extend(fold_preds)
-                        true_values.extend(y_train[val_idx])
+                        cv_predictions.extend(fold_preds)
+                        cv_true_values.extend(y_train[val_idx])
                     
-                    # Calculate cross-validation accuracy
-                    cv_accuracy = self.calculate_age_accuracy(true_values, predictions)
+                    # Calculate cross-validation metrics
+                    cv_accuracy, cv_group_metrics = self.calculate_age_accuracy(
+                        cv_true_values, 
+                        cv_predictions
+                    )
                     
-                    # Train final model on all training data
+                    # Train final model and evaluate on test set
                     self.age_model.fit(X_train, y_train)
-                    
-                    # Evaluate on test set
                     test_predictions = self.age_model.predict(X_test)
-                    test_accuracy = self.calculate_age_accuracy(y_test, test_predictions)
+                    test_accuracy, test_group_metrics = self.calculate_age_accuracy(
+                        y_test, 
+                        test_predictions
+                    )
                     
                     print(f"\n{trait.upper()} Prediction:")
                     print(f"Cross-validation Age Group Accuracy: {cv_accuracy:.2f}")
-                    print(f"Test Set Age Group Accuracy: {test_accuracy:.2f}")
+                    print("\nCross-validation Group Metrics:")
+                    for group, metrics in cv_group_metrics.items():
+                        print(f"{group}: Accuracy = {metrics['accuracy']:.2f}, "
+                              f"Support = {metrics['support']} samples")
                     
-                    # Save the model trained on all training data
+                    print(f"\nTest Set Age Group Accuracy: {test_accuracy:.2f}")
+                    print("\nTest Set Group Metrics:")
+                    for group, metrics in test_group_metrics.items():
+                        print(f"{group}: Accuracy = {metrics['accuracy']:.2f}, "
+                              f"Support = {metrics['support']} samples")
+                    
                     self.models[trait] = self.age_model
+                
                     
                 else:
                     # Handle personality traits
@@ -269,7 +310,7 @@ class UserTraitsPredictor:
 if __name__ == "__main__":
     predictor = UserTraitsPredictor()
     predictor.train_and_save_model(
-        relation_path="data/training/relation/relation.csv",
-        profile_path="data/training/profile/profile.csv",
+        relation_path="../training/relation/relation.csv",
+        profile_path="../training/profile/profile.csv",
         model_save_path="user_traits_prediction_models.pkl"
     )
