@@ -20,18 +20,14 @@ def parse_args():
                        help='Input path (default: input)')
     parser.add_argument('-o', '--output', dest='output_path', default='output',
                        help='Output path (default: output)')
-
     args = parser.parse_args()
+    return args.input_path, args.output_path
 
-    config.INPUT_PATH = args.input_path
-    config.OUTPUT_PATH = args.output_path
 
 def main():
     print("Starting...")
-
-    
-    parse_args()
-    config.set_configs()
+    input, output = parse_args()
+    config.set_configs(input, output)
     config.get_configs()
 
 
