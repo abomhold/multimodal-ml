@@ -34,7 +34,6 @@ def main():
     config.set_configs()
     config.get_configs()
 
-    get_cloud()    
 
     data = pre.main()
     # text_df = text.main(config.TEXT_DIR, data.copy())
