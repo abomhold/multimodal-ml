@@ -17,7 +17,7 @@ def get_configs():
 
 
 def set_configs():
-    global TEXT_DIR, IMAGE_DIR, LIKE_PATH, LIWC_PATH, PROFILE_PATH
+    global TEXT_DIR, IMAGE_DIR, LIKE_PATH, LIWC_PATH, PROFILE_PATH, OUTPUT_PATH, INPUT_PATH
     TEXT_DIR = INPUT_PATH + "text"
     IMAGE_DIR = INPUT_PATH + "image"
     LIKE_PATH = INPUT_PATH + "relation/relation.csv"
