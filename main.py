@@ -40,7 +40,7 @@ def main():
                    .merge(image_df['gender'], on='userid', how='inner')
                    .merge(like_df['age'], on='id', how='inner'))
 
-    post.write_xml(Path(config.OUTPUT_PATH), combined_df)
+    post.write_xml(Path(config.OUTPUT_PATH), image_df)
     print("Done!")
 
 
