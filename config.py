@@ -6,7 +6,6 @@ LIKE_PATH: str = ""
 LIWC_PATH: str = ""
 PROFILE_PATH: str = ""
 
-
 def get_configs():
     print(f"input path: {INPUT_PATH}")
     print(f"output path: {OUTPUT_PATH}\n")
@@ -15,8 +14,6 @@ def get_configs():
     print(f"like dir: {LIKE_PATH}")
     print(f"LIWC path: {LIWC_PATH}")
     print(f"profile path: {PROFILE_PATH}\n")
-
-
 
 
 def set_configs():
