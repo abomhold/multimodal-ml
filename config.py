@@ -1,3 +1,5 @@
+import os
+
 OUTPUT_PATH: str = ""
 INPUT_PATH: str = ""
 TEXT_DIR: str = ""
@@ -18,6 +20,12 @@ def get_configs():
 
 def set_configs(input, output):
     global TEXT_DIR, IMAGE_DIR, LIKE_PATH, LIWC_PATH, PROFILE_PATH, OUTPUT_PATH, INPUT_PATH
+    for entry in os.listdir(output):
+        if os.path.isfile(os.path.join(output, entry)):
+            print(entry)
+            os.remove(os.path.join(output, entry))
+            print(f"removed {entry}")
+
     OUTPUT_PATH = output
     INPUT_PATH = input
     TEXT_DIR = INPUT_PATH + "text"
