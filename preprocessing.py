@@ -1,15 +1,16 @@
 from pathlib import Path
 import get_cloud
 import pandas as pd
-
+import sys
 import config
 
 
 def profile_cvs(path: Path) -> pd.DataFrame:
-    data = pd.read_csv(path).dropna()
-    data = data.drop(columns=["Unnamed: 0"], errors='ignore')
-
-    data["userid"] = data["userid"]
+    data = (pd.read_csv(path)
+    .dropna()
+    .drop(columns=["Unnamed: 0"], errors='ignore')
+    )
+    data['userid'] = data['userid'].astype(str)
     data["age"] = data["age"].apply(lambda x: 20 if x == "-" else x)
     data["gender"] = data["gender"].apply(lambda x: 1 if x == "-" else x)
     data["ope"] = data["ope"].apply(lambda x: 3.9 if x == "-" else x)
@@ -21,14 +22,17 @@ def profile_cvs(path: Path) -> pd.DataFrame:
 
 
 def lwic_cvs(path: Path) -> pd.DataFrame:
-    data = pd.read_csv(path).dropna()
+    data = (pd
+        .read_csv(path)
+        .dropna()
+        .rename(columns={"userId": "userid"})
+    )
+    data['userid'] = data['userid'].astype(str)
     return data
 
-
+# AI for data presservation
 def combine_data(profile: pd.DataFrame, lwic: pd.DataFrame) -> pd.DataFrame:
-    profile.set_index("userid")
-    lwic.set_index("userId")
-    data = pd.merge(profile, lwic, left_index=True, right_index=True)
+    data = pd.merge(profile, lwic, on="userid", how="inner")
     return data
 
 

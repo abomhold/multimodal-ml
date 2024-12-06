@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 import image.image_testrun as image_testrun
 import config
 import like.predict
@@ -27,21 +28,34 @@ def parse_args():
 def main():
     print("Starting...")
 
-    input, output = parse_args()
-    config.set_configs(input, output)
+    input_dir, output_dir = parse_args()
+    config.set_configs(input_dir, output_dir)
     config.get_configs()
 
     data = pre.main()
     print("Starting Image Prediction...")
     image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
+    print("Starting Text Prediction...")
     personality_df = text.main(Path(config.TEXT_DIR), data.copy())
+    print("Starting Like Prediction...")
     like_df = like.predict.predict_all(relation_path=config.LIKE_PATH, data=data.copy())
-    combined_df = (personality_df['arg','con','ext','agr','neu']
-                   .merge(image_df['gender'], on='userid', how='inner')
-                   .merge(like_df['age'], on='id', how='inner'))
+    print("Combining Data...")
+    # Merge the first two DataFrames
+    combined_df = pd.merge(
+        image_df.loc[:, ['userid', 'gender']],
+        personality_df.loc[:, ['userid', 'ope', 'con', 'ext', 'agr', 'neu']],
+        on='userid'
+    )
 
-    post.write_xml(Path(config.OUTPUT_PATH), like_df)
+    # Merge the result with the third DataFrame
+    combined_df = pd.merge(
+        combined_df,
+        like_df.loc[:, ['userid', 'age']],
+        on='userid'
+    )
+    post.write_xml(Path(config.OUTPUT_PATH), combined_df)
     print("Done!")
+
 #./tcss555 -i /data/public-test-data/ -o ~/slavam/
 
 if __name__ == "__main__":
