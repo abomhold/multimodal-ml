@@ -2,8 +2,6 @@ import pickle
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import cross_val_score, KFold
@@ -11,7 +9,6 @@ from sklearn.linear_model import Ridge, Lasso, ElasticNet
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split
 
 class UserTraitsPredictor:
     def __init__(self):
@@ -24,14 +21,7 @@ class UserTraitsPredictor:
         self.models = {}
         self.scalers = {}
         self.label_encoder = LabelEncoder()
-        self.age_model = RandomForestRegressor(
-            n_estimators=50,  # Number of trees
-            max_depth=None,    # Let trees grow fully
-            min_samples_split=2,
-            min_samples_leaf=1,
-            n_jobs=-1,        # Use all available cores
-            random_state=42
-        )
+        
         self.model_candidates = {
             'ridge': Ridge(random_state=42),
             'lasso': Lasso(random_state=42),    
@@ -52,32 +42,18 @@ class UserTraitsPredictor:
         return data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
     
     def preprocess_likes(self, relation_path: str, profile_path: str) -> tuple:
-        """
-        Preprocess the likes and profile data for training.
-        
-        Args:
-            relation_path: Path to the relation CSV file containing user-like pairs
-            profile_path: Path to the profile CSV file containing user traits
-            
-        Returns:
-            tuple containing:
-            - features: Dict with 'like_id' and 'likes_count' features
-            - labels: Dict with trait values for each user
-            - userids: Series of user IDs
-        """
-        # Load the raw data files
+        """Enhanced preprocessing with consistent sample sizes after outlier removal."""
         relation = pd.read_csv(relation_path)
         profile = pd.read_csv(profile_path)
         
-        # Calculate the number of likes per user as an additional feature
+        # Add feature engineering
         likes_count = relation.groupby('userid').size().reset_index(name='likes_count')
         
-        # Convert like IDs to space-separated strings for TF-IDF vectorization
         likes = (relation.groupby('userid')['like_id']
                 .agg(lambda x: ' '.join(map(str, x)))
                 .reset_index())
         
-        # Merge all features and profile data
+        # Merge all features
         all_traits = self.regression_traits + self.classification_traits
         data = (likes
                .merge(likes_count, on='userid')
@@ -87,216 +63,85 @@ class UserTraitsPredictor:
         for trait in self.regression_traits:
             if trait in data.columns:
                 data = self.remove_outliers(data, trait)
-                print(f"After removing outliers for {trait}: {len(data)} samples")
         
-        # Prepare features dictionary
+        # Prepare features and labels
         features = {
             'like_id': data['like_id'],
             'likes_count': data['likes_count']
         }
         
-        # Prepare labels dictionary for regression traits
         labels = {trait: data[trait] for trait in self.regression_traits}
         
-        # Process classification traits (gender) separately
+        # Process gender separately
         for trait in self.classification_traits:
             if trait in data.columns:
-                # Fill missing values and encode categorical labels
                 labels[trait] = self.label_encoder.fit_transform(data[trait].fillna('unknown'))
         
         return features, labels, data['userid']
     
-    def get_age_group(self, age):
-        """Convert age to standardized age group format."""
-        lower = age - (age % 5)  # Round down to nearest 5
-        return f"{lower}-{lower+5}"
-    def get_age_group(self, age):
-        """Convert numerical age to standardized age group format."""
-        age = float(age)
-        if age <= 24:
-            return 'xx-24'
-        elif age <= 34:
-            return '25-34'
-        elif age <= 49:
-            return '35-49'
-        else:
-            return '50-xx'
-        
-    def calculate_age_accuracy(self, y_true, y_pred):
-        """Calculate accuracy of age group predictions."""
-        true_groups = np.array([self.get_age_group(age) for age in y_true])
-        pred_groups = np.array([self.get_age_group(age) for age in y_pred])
-        
-        # Calculate overall accuracy
-        accuracy = accuracy_score(true_groups, pred_groups)
-        
-        # Calculate per-group metrics
-        group_metrics = {}
-        for group in ['xx-24', '25-34', '35-49', '50-xx']:
-            group_mask = (true_groups == group)
-            if group_mask.sum() > 0:
-                group_accuracy = accuracy_score(
-                    true_groups[group_mask], 
-                    pred_groups[group_mask]
-                )
-                group_support = group_mask.sum()
-                group_metrics[group] = {
-                    'accuracy': group_accuracy,
-                    'support': group_support
-                }
-        
-        return accuracy, group_metrics
-
-
     def train_and_save_model(self, relation_path: str, profile_path: str, model_save_path: str):
-        """Enhanced training with proper train-test split and evaluation metrics."""
+        """Enhanced training with consistent sample sizes."""
         features, labels, userids = self.preprocess_likes(relation_path, profile_path)
         
         # Create feature matrix
         X_text = self.vectorizer.fit_transform(features['like_id'])
         
-        # Create train-test split first (85-15)
-        indices = np.arange(X_text.shape[0])
-        train_idx, test_idx = train_test_split(
-            indices, 
-            test_size=0.15,  # 15% for testing
-            random_state=42
-        )
-        
-        # Split features into train and test
-        X_train = X_text[train_idx]
-        X_test = X_text[test_idx]
-        
-        print(f"\nData split sizes:")
-        print(f"Training samples: {len(train_idx)} ({len(train_idx)/len(indices):.1%})")
-        print(f"Testing samples: {len(test_idx)} ({len(test_idx)/len(indices):.1%})")
-        
-        print("\nTraining and evaluating models...")
-        
-        # Train regression models with proper evaluation
+        print("\nTraining regression models...")
         for trait in self.regression_traits:
             if trait in labels:
-                y = np.array(labels[trait])
-                y_train = y[train_idx]
-                y_test = y[test_idx]
+                best_rmse = float('inf')
+                best_model = None
+                best_model_name = None
                 
-                if trait == 'age':
-                    # Cross-validation for age groups
-                    cv_predictions = []
-                    cv_true_values = []
-                    kf = KFold(n_splits=5, shuffle=True, random_state=42)
-                    
-                    for fold_train_idx, val_idx in kf.split(X_train):
-                        self.age_model.fit(
-                            X_train[fold_train_idx], 
-                            y_train[fold_train_idx]
-                        )
-                        fold_preds = self.age_model.predict(X_train[val_idx])
-                        cv_predictions.extend(fold_preds)
-                        cv_true_values.extend(y_train[val_idx])
-                    
-                    # Calculate cross-validation metrics
-                    cv_accuracy, cv_group_metrics = self.calculate_age_accuracy(
-                        cv_true_values, 
-                        cv_predictions
-                    )
-                    
-                    # Train final model and evaluate on test set
-                    self.age_model.fit(X_train, y_train)
-                    test_predictions = self.age_model.predict(X_test)
-                    test_accuracy, test_group_metrics = self.calculate_age_accuracy(
-                        y_test, 
-                        test_predictions
-                    )
-                    
-                    print(f"\n{trait.upper()} Prediction:")
-                    print(f"Cross-validation Age Group Accuracy: {cv_accuracy:.2f}")
-                    print("\nCross-validation Group Metrics:")
-                    for group, metrics in cv_group_metrics.items():
-                        print(f"{group}: Accuracy = {metrics['accuracy']:.2f}, "
-                              f"Support = {metrics['support']} samples")
-                    
-                    print(f"\nTest Set Age Group Accuracy: {test_accuracy:.2f}")
-                    print("\nTest Set Group Metrics:")
-                    for group, metrics in test_group_metrics.items():
-                        print(f"{group}: Accuracy = {metrics['accuracy']:.2f}, "
-                              f"Support = {metrics['support']} samples")
-                    
-                    self.models[trait] = self.age_model
+                y = labels[trait]
                 
-                    
-                else:
-                    # Handle personality traits
-                    best_metric = float('inf')
-                    best_model = None
-                    best_model_name = None
-                    
-                    for model_name, model in self.model_candidates.items():
-                        pipeline = Pipeline([
-                            ('scaler', StandardScaler(with_mean=False)),
-                            ('model', model)
-                        ])
-                        
-                        # Cross-validation on training data only
-                        cv_scores = cross_val_score(
-                            pipeline, X_train, y_train,
-                            cv=KFold(n_splits=5, shuffle=True, random_state=42),
-                            scoring='neg_root_mean_squared_error'
-                        )
-                        metric = -cv_scores.mean()
-                        
-                        if metric < best_metric:
-                            best_metric = metric
-                            best_model = model
-                            best_model_name = model_name
-                    
-                    # Train final pipeline on all training data
+                for model_name, model in self.model_candidates.items():
                     pipeline = Pipeline([
                         ('scaler', StandardScaler(with_mean=False)),
-                        ('model', best_model)
+                        ('model', model)
                     ])
-                    pipeline.fit(X_train, y_train)
                     
-                    # Evaluate on test set
-                    test_predictions = pipeline.predict(X_test)
-                    test_rmse = np.sqrt(mean_squared_error(y_test, test_predictions))
+                    cv_scores = cross_val_score(
+                        pipeline, X_text, y,
+                        cv=KFold(n_splits=5, shuffle=True, random_state=42),
+                        scoring='neg_root_mean_squared_error'
+                    )
                     
-                    print(f"\n{trait.upper()} Prediction:")
-                    print(f"Best model: {best_model_name}")
-                    print(f"Cross-validation RMSE: {-best_metric:.2f}")
-                    print(f"Test Set RMSE: {test_rmse:.2f}")
+                    mean_rmse = -cv_scores.mean()
+                    std_rmse = cv_scores.std()
                     
-                    self.models[trait] = pipeline
+                    if mean_rmse < best_rmse:
+                        best_rmse = mean_rmse
+                        best_model = model
+                        best_model_name = model_name
+                
+                print(f"\n{trait.upper()} Prediction:")
+                print(f"Best model: {best_model_name}")
+                print(f"Cross-validation RMSE: {best_rmse:.2f} (+/- {std_rmse:.2f})")
+                
+                pipeline = Pipeline([
+                    ('scaler', StandardScaler(with_mean=False)),
+                    ('model', best_model)
+                ])
+                pipeline.fit(X_text, y)
+                self.models[trait] = pipeline
 
-        # Handle gender classification
+        print("\nTraining classification models...")
         for trait in self.classification_traits:
             if trait in labels:
-                y = np.array(labels[trait])
-                y_train = y[train_idx]
-                y_test = y[test_idx]
-                
                 model = MultinomialNB()
+                model.fit(X_text, labels[trait])
+                self.models[trait] = model
                 
-                # Cross-validation on training data
+                # Calculate and print cross-validation scores
                 cv_scores = cross_val_score(
-                    model, X_train, y_train,
+                    model, X_text, labels[trait],
                     cv=KFold(n_splits=5, shuffle=True, random_state=42),
                     scoring='accuracy'
                 )
-                
-                # Train final model on all training data
-                model.fit(X_train, y_train)
-                
-                # Evaluate on test set
-                test_accuracy = model.score(X_test, y_test)
-                
                 print(f"\n{trait.upper()} Prediction:")
-                print(f"Cross-validation Accuracy: {cv_scores.mean():.2f}")
-                print(f"Test Set Accuracy: {test_accuracy:.2f}")
-                
-                self.models[trait] = model
+                print(f"Cross-validation Accuracy: {cv_scores.mean():.2f} (+/- {cv_scores.std():.2f})")
         
-        # Save the models
         with open(model_save_path, 'wb') as f:
             pickle.dump({
                 'vectorizer': self.vectorizer,
@@ -306,6 +151,7 @@ class UserTraitsPredictor:
                 'classification_traits': self.classification_traits
             }, f)
         print(f"\nModels saved to {model_save_path}")
+        
 
 if __name__ == "__main__":
     predictor = UserTraitsPredictor()
