@@ -100,8 +100,6 @@ def predict_all(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
                     np.max(probabilities, axis=1), 2
                 )
                 
-                print(f"Prediction distribution for {trait}:")
-                print(pd.Series(predictions).value_counts(normalize=True))
 
     except Exception as e:
         import traceback
