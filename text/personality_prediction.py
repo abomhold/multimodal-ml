@@ -249,7 +249,7 @@ def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
     model.eval()
     tokenizer = AutoTokenizer.from_pretrained(f"{model_path}/tokenizer")
     liwc_columns = config.get('liwc_columns', [col for col in df.columns
-                                               if col not in ['userid', 'text', 'words', 'age', 'gender'] + TRAIT_NAMES])
+                                               if col not in ['userid', 'text', 'words', 'age', 'gender','Seg' ] + TRAIT_NAMES])
     tokens = tokenizer(
         df['text'].fillna("").astype(str).tolist(),
         padding='max_length',
@@ -257,6 +257,7 @@ def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
         max_length=SEQUENCE_LENGTH,
         return_tensors='np'
     )['input_ids']
+    print(liwc_columns)
     linguistic_features = df[liwc_columns].values
     dataset = TextDataset(tokens, linguistic_features)
     trainer = Trainer(model=model)
