@@ -34,7 +34,7 @@ def main():
 
     data = pre.main()
     print("Starting Image Prediction...")
-    image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
+    #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
     print("Starting Text Prediction...")
     personality_df = text.main(Path(config.TEXT_DIR), data.copy())
     print("Starting Like Prediction...")
@@ -42,7 +42,7 @@ def main():
     print("Combining Data...")
     # Merge the first two DataFrames
     combined_df = pd.merge(
-        image_df.loc[:, ['userid', 'gender']],
+      #  image_df.loc[:, ['userid', 'gender']],
         personality_df.loc[:, ['userid', 'ope', 'con', 'ext', 'agr', 'neu']],
         on='userid'
     )

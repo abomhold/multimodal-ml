@@ -166,7 +166,6 @@ def save_model_for_export(model, scaled_ling, scaling_factors, tokenizer):
     # Save tokenizer
     tokenizer.save_pretrained('export/tokenizer')
 
-    # Create zip file
 
 
 # Modify the train_and_evaluate function
@@ -182,14 +181,11 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
     for fold, (train_idx, val_idx) in enumerate(kf.split(tokens)):
         logging.info(f"\nFold {fold + 1}/{NUM_FOLDS}")
 
-        # Create datasets for this fold
         train_dataset = TextDataset(tokens[train_idx], scaled_ling[train_idx], y_scaled[train_idx])
         val_dataset = TextDataset(tokens[val_idx], scaled_ling[val_idx], y_scaled[val_idx])
 
-        # Initialize model
         model = PersonalityPredictor(MODEL_NAME, scaled_ling.shape[1]).to(device)
 
-        # Training arguments
         training_args = TrainingArguments(
             output_dir=f'./results_fold_{fold}',
             num_train_epochs=EPOCHS,
@@ -209,7 +205,6 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
             metric_for_best_model="eval_loss"
         )
 
-        # Train and evaluate
         trainer = Trainer(
             model=model,
             args=training_args,
@@ -220,28 +215,22 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
 
         trainer.train()
 
-        # Evaluate
         eval_results = trainer.evaluate()
         current_loss = eval_results['eval_loss']
 
-        # Save best model
         if current_loss < best_eval_loss:
             best_eval_loss = current_loss
             best_model = model
 
-        # Log results
         for trait in TRAIT_NAMES:
             logging.info(f"{trait.upper()}:")
             logging.info(f"  MSE: {eval_results[f'eval_{trait}_mse']:.4f}")
             logging.info(f"  MAE: {eval_results[f'eval_{trait}_mae']:.4f}")
             logging.info(f"  Correlation: {eval_results[f'eval_{trait}_corr']:.4f}")
 
-    # Save the best model for download
     save_model_for_export(best_model, scaled_ling, scaling_factors, tokenizer)
 
 def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
-    """Predict personality traits for new data."""
-    # First load to CPU, then optionally move to MPS
     config = torch.load(f"{model_path}/model_config.pt", map_location='cpu')
     model_state = torch.load(f"{model_path}/model_state.pt", map_location='cpu')
 
@@ -262,7 +251,7 @@ def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
     liwc_columns = config.get('liwc_columns', [col for col in df.columns
                                                if col not in ['userid', 'text', 'words', 'age', 'gender'] + TRAIT_NAMES])
     tokens = tokenizer(
-        df['words'].fillna("").astype(str).tolist(),
+        df['text'].fillna("").astype(str).tolist(),
         padding='max_length',
         truncation=True,
         max_length=SEQUENCE_LENGTH,
