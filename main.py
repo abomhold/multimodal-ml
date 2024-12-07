@@ -34,29 +34,27 @@ def main():
 
     data = pre.main()
     print("Starting Image Prediction...")
-    #image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
+    image_df = image_testrun.test(config.IMAGE_DIR, data.copy(), model_name, device)
     print("Starting Text Prediction...")
     personality_df = text.main(Path(config.TEXT_DIR), data.copy())
     print("Starting Like Prediction...")
     like_df = like.predict.predict_all(relation_path=config.LIKE_PATH, data=data.copy())
     print("Combining Data...")
-    # Merge the first two DataFrames
+
     combined_df = pd.merge(
-      #  image_df.loc[:, ['userid', 'gender']],
+        image_df.loc[:, ['userid', 'gender']],
         personality_df.loc[:, ['userid', 'ope', 'con', 'ext', 'agr', 'neu']],
         on='userid'
     )
-
-    # Merge the result with the third DataFrame
     combined_df = pd.merge(
         combined_df,
         like_df.loc[:, ['userid', 'age']],
         on='userid'
     )
+
     post.write_xml(Path(config.OUTPUT_PATH), combined_df)
     print("Done!")
 
-#./tcss555 -i /data/public-test-data/ -o ~/slavam/
 
 if __name__ == "__main__":
     main()
