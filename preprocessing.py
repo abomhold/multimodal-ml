@@ -42,7 +42,7 @@ def get_baseline(profile_path, lwic_path) -> pd.DataFrame:
 
 
 def main():
-    #get_cloud.main()
+    get_cloud.main()
     data = combine_data(profile_cvs(config.PROFILE_PATH), lwic_cvs(config.LIWC_PATH))
     return data
 
