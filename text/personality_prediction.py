@@ -239,6 +239,43 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
     # Save the best model for download
     save_model_for_export(best_model, scaled_ling, scaling_factors, tokenizer)
 
+def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
+    """Predict personality traits for new data."""
+    # First load to CPU, then optionally move to MPS
+    config = torch.load(f"{model_path}/model_config.pt", map_location='cpu')
+    model_state = torch.load(f"{model_path}/model_state.pt", map_location='cpu')
+
+    model = PersonalityPredictor(
+        model_name=MODEL_NAME,
+        n_linguistic_features=config['n_linguistic_features']
+    )
+
+    model.load_state_dict(model_state)
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+        model = model.to(device)
+    else:
+        device = torch.device("cpu")
+
+    model.eval()
+    tokenizer = AutoTokenizer.from_pretrained(f"{model_path}/tokenizer")
+    liwc_columns = config.get('liwc_columns', [col for col in df.columns
+                                               if col not in ['userid', 'text', 'words', 'age', 'gender'] + TRAIT_NAMES])
+    tokens = tokenizer(
+        df['words'].fillna("").astype(str).tolist(),
+        padding='max_length',
+        truncation=True,
+        max_length=SEQUENCE_LENGTH,
+        return_tensors='np'
+    )['input_ids']
+    linguistic_features = df[liwc_columns].values
+    dataset = TextDataset(tokens, linguistic_features)
+    trainer = Trainer(model=model)
+    predictions = trainer.predict(dataset).predictions
+    results = pd.DataFrame(predictions, columns=TRAIT_NAMES)
+    results['userid'] = df['userid']
+    return results
+
 def main():
     # Use direct paths in Colab environment
     CLEANED_DATA_PATH = './cleaned.csv'  # Files uploaded directly to Colab
@@ -247,7 +284,7 @@ def main():
     tokens, scaled_ling, y_scaled, scaling_factors = load_and_preprocess(CLEANED_DATA_PATH, LIWC_PROFILE_PATH)
     logging.info("Data Preprocessing Completed.")
 
-    train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors)
+    # train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors)scaling_factors
 
 if __name__ == "__main__":
     main()
