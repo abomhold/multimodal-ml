@@ -1,7 +1,5 @@
 from pathlib import Path
-import get_cloud
 import pandas as pd
-import sys
 import config
 
 

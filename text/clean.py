@@ -45,22 +45,6 @@ def process_text_files(text_path: str) -> Dict[str, str]:
     return user_texts
 
 
-# def process_text_files(text_path: Path) -> Dict[str, str]:
-#     user_texts = {}
-#     for file_path in Path(text_path).glob('*.txt'):
-#         user_id = file_path.stem
-#         user_texts[user_id] = ''
-#         result = charset_normalizer.from_path(file_path)
-#         if result.first() is not None:
-#             with file_path.open('r', encoding=result.first().encoding) as text_file:
-#                 content = text_file.read()
-#                 user_texts[user_id] = clean_text(content)
-#         else:
-#             print(f"Could not determine encoding for {file_path}")
-#
-#     return user_texts
-
-
 def main(path: Path, data: pd.DataFrame):
     user_texts = process_text_files(path)
     text_df = pd.DataFrame.from_dict(user_texts, orient='index', columns=['text'])

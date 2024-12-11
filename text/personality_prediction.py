@@ -151,20 +151,20 @@ def load_and_preprocess(cleaned_path: str, liwc_path: str):
 
 def save_model_for_export(model, scaled_ling, scaling_factors, tokenizer):
     """Save model and configuration for downloading."""
-    os.makedirs('export', exist_ok=True)
+    os.makedirs('extra', exist_ok=True)
 
     # Save model state
-    torch.save(model.state_dict(), 'export/model_state.pt')
+    torch.save(model.state_dict(), 'extra/model_state.pt')
 
     # Save configuration
     config = {
         'n_linguistic_features': scaled_ling.shape[1],
         'scaling_factors': scaling_factors,
     }
-    torch.save(config, 'export/model_config.pt')
+    torch.save(config, 'extra/model_config.pt')
 
     # Save tokenizer
-    tokenizer.save_pretrained('export/tokenizer')
+    tokenizer.save_pretrained('extra/tokenizer')
 
 
 
@@ -230,7 +230,7 @@ def train_and_evaluate(tokens, scaled_ling, y_scaled, scaling_factors):
 
     save_model_for_export(best_model, scaled_ling, scaling_factors, tokenizer)
 
-def predict(df: pd.DataFrame, model_path: str = './export') -> pd.DataFrame:
+def predict(df: pd.DataFrame, model_path: str = './extra') -> pd.DataFrame:
     config = torch.load(f"{model_path}/model_config.pt", map_location='cpu')
     model_state = torch.load(f"{model_path}/model_state.pt", map_location='cpu')
 
