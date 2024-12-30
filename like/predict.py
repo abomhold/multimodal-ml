@@ -1,111 +1,109 @@
 import pickle
+import joblib
 import numpy as np
 import pandas as pd
 from pathlib import Path
 
 class UserTraitsPredictor:
-    def __init__(self, model_path: str = "like/user_traits_prediction_models.pkl"):
-        self.model_path = model_path
+    def __init__(self, model_dir: str = "like/user_traits_prediction_models"):
+        """
+        Initialize the predictor with saved models from training.
+        The model_dir should contain all saved components from our training process.
+        """
+        self.model_dir = Path(model_dir)
         self.load_models()
     
     def load_models(self):
-        """Load the saved models and preprocessing objects."""
+        """
+        Load all necessary model components from the saved directory.
+        This includes the vectorizer, encoders, and all trained models.
+        """
         try:
-            with open(self.model_path, 'rb') as f:
-                saved_data = pickle.load(f)
-                self.vectorizer = saved_data['vectorizer']
-                self.models = saved_data['models']
-                self.label_encoder = saved_data['label_encoder']
-                self.regression_traits = saved_data['regression_traits']
-                self.classification_traits = saved_data['classification_traits']
+            # Load text processing components
+            with open(self.model_dir / 'vectorizer.pkl', 'rb') as f:
+                self.vectorizer = pickle.load(f)
+            
+            # Load classification components
+            with open(self.model_dir / 'age_encoder.pkl', 'rb') as f:
+                self.age_encoder = pickle.load(f)
+            with open(self.model_dir / 'gender_encoder.pkl', 'rb') as f:
+                self.gender_encoder = pickle.load(f)
+            
+            # Load trained models
+            self.age_classifier = joblib.load(self.model_dir / 'age_classifier.joblib')
+            self.gender_classifier = joblib.load(self.model_dir / 'gender_classifier.joblib')
+            
+            # Load personality models
+            self.personality_models = {}
+            for trait in ['ope', 'neu', 'ext', 'agr', 'con']:
+                self.personality_models[trait] = joblib.load(
+                    self.model_dir / f'{trait}_model.joblib'
+                )
+                
         except Exception as e:
             raise Exception(f"Error loading models: {str(e)}")
 
-def predict_all(relation_path: str, data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Predict user traits using pretrained model.
-    Args:
-        relation_path: Path to relation CSV file
-        data: DataFrame containing user data
-    Returns:
-        DataFrame with predictions
-    """
-    print("\nProcessing likes data...")
-    result_df = data.copy()
-
-    try:
-        # Initialize predictor with saved models
-        predictor = UserTraitsPredictor()
-        print("Loaded models for traits:", predictor.models.keys())
-
-        # Load and process relation data
-        relation = pd.read_csv(relation_path)
-        print(f"Loaded {len(relation)} relations")
+    def predict_all(self, likes_path: str, output_df: pd.DataFrame) -> pd.DataFrame:
+        print("\nProcessing likes data...")
+        result_df = output_df.copy()
         
-        likes = (relation.groupby('userid')['like_id']
-                .agg(lambda x: ' '.join(map(str, x)))
-                .reset_index())
-        print(f"Processed {len(likes)} unique users' likes")
+        try:
+            # Read and process likes data
+            likes_data = pd.read_csv(likes_path)
+            print(f"Loaded {len(likes_data)} like entries")
+            
+            # Convert likes to the format expected by our models
+            user_likes = (likes_data.groupby('userid')['like_id']
+                        .agg(lambda x: ' '.join(map(str, x)))
+                        .reset_index())
+            print(f"Processed likes for {len(user_likes)} unique users")
+            
+            # Create feature matrix using trained vectorizer
+            X = self.vectorizer.transform(user_likes['like_id'])
+            print(f"Created feature matrix with shape: {X.shape}")
+            
+            # Create predictions DataFrame
+            predictions_df = pd.DataFrame({'userid': user_likes['userid']})
+            
+            # Age predictions
+            print("Making age predictions...")
+            age_encoded = self.age_classifier.predict(X)
+            predictions_df['age_range'] = self.age_encoder.inverse_transform(age_encoded)
+            
+            # Gender predictions
+            print("Making gender predictions...")
+            gender_encoded = self.gender_classifier.predict(X)
+            predictions_df['gender'] = self.gender_encoder.inverse_transform(gender_encoded)
+            gender_probs = self.gender_classifier.predict_proba(X)
+            predictions_df['gender_confidence'] = np.round(np.max(gender_probs, axis=1), 2)
+            
+            # Personality predictions
+            print("Making personality predictions...")
+            for trait, model in self.personality_models.items():
+                predictions = model.predict(X)
+                predictions = np.clip(predictions, 1, 5)
+                predictions = np.round(predictions, 2)
+                predictions_df[trait] = predictions
+            
+            # Drop any existing prediction columns from result_df before merging
+            columns_to_drop = ['age_range', 'gender', 'gender_confidence', 'ope', 'con', 'ext', 'agr', 'neu']
+            result_df = result_df.drop(columns=[col for col in columns_to_drop if col in result_df.columns])
+            
+            # Merge predictions
+            result_df = pd.merge(
+                result_df,
+                predictions_df,
+                on='userid',
+                how='left'
+            )
+            
+            print(f"Made predictions for {len(predictions_df)} users")
+            print("Final columns:", result_df.columns.tolist())
+            
+        except Exception as e:
+            import traceback
+            print(f"Error in prediction process: {str(e)}")
+            print("Full traceback:")
+            print(traceback.format_exc())
         
-        # Merge with input data
-        merged_data = pd.merge(data, likes, on='userid', how='left')
-        valid_data = merged_data.dropna(subset=['like_id'])
-        print(f"Found valid likes for {len(valid_data)} out of {len(data)} users")
-
-        if len(valid_data) == 0:
-            print("Warning: No valid likes data found")
-            return result_df
-
-        # Transform likes using pretrained vectorizer
-        X_new = predictor.vectorizer.transform(valid_data['like_id'])
-        print(f"Created feature matrix with shape: {X_new.shape}")
-
-        # Make predictions for regression traits
-        for trait in predictor.regression_traits:
-            if trait in predictor.models:
-                print(f"\nPredicting {trait}...")
-                model = predictor.models[trait]
-                print(f"Model type: {type(model)}")
-                
-                predictions = model.predict(X_new)
-                print(f"Raw predictions stats for {trait}:")
-                print(pd.Series(predictions).describe())
-                
-                if trait == 'age':
-                    # Age remains as integers
-                    predictions = np.clip(np.round(predictions).astype(int), 13, 90)
-                    age_ranges = [f"{age-5}-{age+5}" for age in predictions]
-                    result_df.loc[valid_data.index, 'age_range'] = age_ranges
-                else:
-                    # Personality traits are clipped to [1, 5] range and rounded to 2 decimal places
-                    predictions = np.clip(predictions, 1, 5)
-                    predictions = np.round(predictions, 2)
-                
-                result_df.loc[valid_data.index, trait] = predictions
-                print(f"Final predictions stats for {trait}:")
-                print(pd.Series(predictions).describe())
-
-        # Make predictions for classification traits
-        for trait in predictor.classification_traits:
-            if trait in predictor.models:
-                print(f"\nPredicting {trait}...")
-                predictions = predictor.models[trait].predict(X_new)
-                probabilities = predictor.models[trait].predict_proba(X_new)
-                
-                predictions = predictor.label_encoder.inverse_transform(predictions)
-                
-                result_df.loc[valid_data.index, trait] = predictions
-                # Round confidence scores to 2 decimal places as well
-                result_df.loc[valid_data.index, f'{trait}_confidence'] = np.round(
-                    np.max(probabilities, axis=1), 2
-                )
-                
-
-    except Exception as e:
-        import traceback
-        print(f"Error in traits prediction: {str(e)}")
-        print("Full traceback:")
-        print(traceback.format_exc())
         return result_df
-
-    return result_df
