@@ -18,4 +18,4 @@ COPY ./text ./text
 COPY ./image ./image
 COPY ./like ./like
 COPY ./*.py ./
-ENTRYPOINT ["python3", "/home/text/masumi-rnn.py"]
+ENTRYPOINT ["python3", "/home/main.py"]

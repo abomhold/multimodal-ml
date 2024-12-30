@@ -55,7 +55,6 @@ def process_text_files(text_path: Path) -> (Dict[str, str], Dict[str, str]):
 
     return user_texts, user_words
 
-
 def main(path: Path, data: pd.DataFrame):
     # Read text files into a dictionary
     user_texts, user_words = process_text_files(path)

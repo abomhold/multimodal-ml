@@ -132,7 +132,8 @@ def test(test_image_path, dataframe, model_choice, device):
 
             output = model(image)
             output = F.sigmoid(output)
-            pred_class = torch.argmax(output, dim=1).item()  # to get the class with the highest value
+            pred_class = torch.argmax(output, dim=1).item()
+             # to get the class with the highest value
             # You don't format anything here, just set it as int,
             # That way we know that were are all getting the same kind of output
             # ie, the genders have to be lower case on the vm
